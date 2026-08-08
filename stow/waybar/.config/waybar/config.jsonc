@@ -2,7 +2,7 @@
   "layer": "top",
   "position": "top",
   "spacing": 0,
-  "height": 34,
+  "height": 36,
   "modules-left": ["custom/launcher", "hyprland/workspaces"],
   "modules-center": ["clock"],
   "modules-right": [
@@ -44,22 +44,23 @@
     "format-ethernet": "󰀂",
     "format-disconnected": "󰤮",
     "interval": 3,
-    "on-click": "alacritty --class omarchy-tui-net -e $HOME/.cargo/bin/impala"
+    "on-click": "alacritty --class omarchy-tui-net -e sh -c 'command -v impala >/dev/null && impala || nmtui'"
   },
   "battery": {
     "format": "{capacity}% {icon}",
     "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
     "interval": 5,
-    "on-click": "wlogout"
+    "on-click": "sh -c 'command -v wlogout >/dev/null && wlogout || $HOME/.config/hypr/scripts/powermenu.sh'"
   },
   "bluetooth": {
     "format": "󰂯",
     "format-off": "󰂲",
-    "on-click": "alacritty --class omarchy-tui-bt -e $HOME/.cargo/bin/bluetui"
+    "on-click": "alacritty --class omarchy-tui-bt -e sh -c 'command -v bluetui >/dev/null && bluetui || bluetoothctl'"
   },
   "pulseaudio": {
     "format": "{icon}",
-    "on-click": "alacritty --class omarchy-tui-audio -e sh -c 'command -v wiremix >/dev/null && wiremix || wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle'",
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     "format-muted": "󰝟",
     "format-icons": {
       "default": ["󰕿", "󰖀", "󰕾"]
