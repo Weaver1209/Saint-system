@@ -11,7 +11,6 @@
     "bluetooth",
     "network",
     "pulseaudio",
-    "cpu",
     "battery"
   ],
   "hyprland/workspaces": {
@@ -27,11 +26,6 @@
     "on-click": "rofi -show drun",
     "tooltip-format": "App Launcher"
   },
-  "cpu": {
-    "interval": 5,
-    "format": "󰍛",
-    "on-click": "alacritty --class omarchy-tui-cpu -e sh -c 'command -v btop >/dev/null && btop || htop'"
-  },
   "clock": {
     "format": "{:L%A %H:%M}",
     "format-alt": "{:L%d %B W%V %Y}",
@@ -44,7 +38,7 @@
     "format-ethernet": "󰀂",
     "format-disconnected": "󰤮",
     "interval": 3,
-    "on-click": "alacritty --class omarchy-tui-net -e sh -c 'command -v impala >/dev/null && impala || nmtui'"
+    "on-click": "alacritty --class omarchy-tui-net -e $HOME/.cargo/bin/impala"
   },
   "battery": {
     "format": "{capacity}% {icon}",
@@ -55,7 +49,7 @@
   "bluetooth": {
     "format": "󰂯",
     "format-off": "󰂲",
-    "on-click": "alacritty --class omarchy-tui-bt -e sh -c 'command -v bluetui >/dev/null && bluetui || bluetoothctl'"
+    "on-click": "alacritty --class omarchy-tui-bt -e $HOME/.cargo/bin/bluetui"
   },
   "pulseaudio": {
     "format": "{icon}",
