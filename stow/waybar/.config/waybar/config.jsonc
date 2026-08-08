@@ -38,7 +38,7 @@
     "format-ethernet": "󰀂",
     "format-disconnected": "󰤮",
     "interval": 3,
-    "on-click": "alacritty --class omarchy-tui-net -e $HOME/.cargo/bin/impala"
+    "on-click": "alacritty --class omarchy-tui-net -e sh -c 'export LC_ALL=en_IN.UTF-8; $HOME/.cargo/bin/impala-nm 2>/dev/null || $HOME/.cargo/bin/impala'"
   },
   "battery": {
     "format": "{capacity}% {icon}",
@@ -49,7 +49,7 @@
   "bluetooth": {
     "format": "󰂯",
     "format-off": "󰂲",
-    "on-click": "alacritty --class omarchy-tui-bt -e $HOME/.cargo/bin/bluetui"
+    "on-click": "alacritty --class omarchy-tui-bt -e sh -c 'export LC_ALL=en_IN.UTF-8; $HOME/.cargo/bin/bluetui'"
   },
   "pulseaudio": {
     "format": "{icon}",
