@@ -1,0 +1,28 @@
+#Secrets
+.env
+.env.*
+*.secret 
+
+
+#SSH
+.ssh/
+
+# GPG 
+.gnupg/
+
+# Local Machine State 
+
+.local-state/
+
+# Editor/OS junk
+
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Credentials
+
+credentials*
+secrets*
+
