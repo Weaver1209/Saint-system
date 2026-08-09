@@ -1,0 +1,33 @@
+format = """
+[░▒▓](#74c7ec)\
+[ 󰌽 ](bg:#74c7ec fg:#11111b)\
+[](fg:#74c7ec bg:#89b4fa)\
+$directory\
+[](fg:#89b4fa bg:#cba6f7)\
+$git_branch\
+$git_status\
+[](fg:#cba6f7 bg:#313244)\
+$character
+"""
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+[directory]
+style = "bg:#89b4fa fg:#11111b bold"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = " "
+style = "bg:#cba6f7 fg:#11111b bold"
+format = "[ $symbol$branch ]($style)"
+
+[git_status]
+style = "bg:#cba6f7 fg:#11111b bold"
+format = "[$all_status$ahead_behind ]($style)"
+
+[character]
+success_symbol = "[ ❯ ](bg:#313244 fg:#a6e3a1 bold)[](fg:#313244)"
+error_symbol = "[ ❯ ](bg:#313244 fg:#f38ba8 bold)[](fg:#313244)"
