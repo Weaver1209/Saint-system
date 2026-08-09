@@ -76,21 +76,16 @@ hl.bind(
 )
 
 hl.bind(
+    "SUPER + SHIFT + O",
+    hl.dsp.exec_cmd("ghostty -e omp"),
+    { description = "Open Oh My Pi (OMP)" }
+)
+
+hl.bind(
     "SUPER + SHIFT + W",
     hl.dsp.exec_cmd("omarchy-launch-webapp https://web.whatsapp.com"),
     { description = "Open WhatsApp Web" }
 )
-
--- OMP Submap (SUPER + SHIFT + O)
-hl.bind("SUPER + SHIFT + O", "submap", "omp")
-
--- Keys within 'omp' submap:
-hl.bind("W", hl.dsp.exec_cmd("omarchy-launch-webapp https://web.whatsapp.com"), { submap = "omp" })
-hl.bind("W", "submap", "reset", { submap = "omp" })
-hl.bind("w", hl.dsp.exec_cmd("omarchy-launch-webapp https://web.whatsapp.com"), { submap = "omp" })
-hl.bind("w", "submap", "reset", { submap = "omp" })
-hl.bind("ESCAPE", "submap", "reset", { submap = "omp" })
-
 -- Exit
 hl.bind(
     "SUPER + SHIFT + M",
