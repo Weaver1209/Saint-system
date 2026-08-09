@@ -16,16 +16,39 @@ if [ -z "$WALLPAPER" ]; then
     exit 1
 fi
 
-# Write updated hyprpaper configuration
-cat << EOF > "$CONFIG_FILE"
-preload = $WALLPAPER
-wallpaper = ,$WALLPAPER
-EOF
+# Get list of connected monitors dynamically
+MONITORS=$(hyprctl monitors -j 2>/dev/null | jq -r '.[].name' 2>/dev/null)
+if [ -z "$MONITORS" ]; then
+    MONITORS=$(hyprctl monitors 2>/dev/null | grep "^Monitor" | awk '{print $2}')
+fi
 
-# Try dynamically updating wallpaper via IPC if hyprpaper is running,
-# otherwise fallback to restarting hyprpaper daemon with the new config.
+# Generate hyprpaper.conf dynamically using hyprpaper v0.8+ block syntax
+{
+    echo "# Managed automatically by ~/.config/hyprpaper/hyprpaper.sh"
+    if [ -n "$MONITORS" ]; then
+        for MON in $MONITORS; do
+            echo "wallpaper {"
+            echo "    monitor = $MON"
+            echo "    path = $WALLPAPER"
+            echo "}"
+        done
+    else
+        echo "wallpaper {"
+        echo "    monitor = "
+        echo "    path = $WALLPAPER"
+        echo "}"
+    fi
+} > "$CONFIG_FILE"
+
+# Apply dynamically via IPC if hyprpaper is running, else start daemon with config
 if pgrep -x "hyprpaper" >/dev/null 2>&1 && hyprctl hyprpaper preload "$WALLPAPER" >/dev/null 2>&1; then
-    hyprctl hyprpaper wallpaper ",$WALLPAPER" >/dev/null 2>&1
+    if [ -n "$MONITORS" ]; then
+        for MON in $MONITORS; do
+            hyprctl hyprpaper wallpaper "$MON,$WALLPAPER" >/dev/null 2>&1
+        done
+    else
+        hyprctl hyprpaper wallpaper ",$WALLPAPER" >/dev/null 2>&1
+    fi
     hyprctl hyprpaper unload all >/dev/null 2>&1 || true
 else
     pkill -x hyprpaper >/dev/null 2>&1 || true
