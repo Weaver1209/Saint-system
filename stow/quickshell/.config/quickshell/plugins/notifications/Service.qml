@@ -154,6 +154,48 @@ Item {
       if (service.liveRefs[snapshot.originalId] === notification)
         delete service.liveRefs[snapshot.originalId]
     })
+
+    var isOsd = false
+    var syncHint = ""
+    var progressVal = ""
+    try {
+      if (notification.hints) {
+        if (notification.hints["x-canonical-private-synchronous"])
+          syncHint = String(notification.hints["x-canonical-private-synchronous"])
+        else if (notification.hints["synchronous"])
+          syncHint = String(notification.hints["synchronous"])
+        if (notification.hints["value"] !== undefined) progressVal = String(notification.hints["value"])
+      }
+    } catch (e) {}
+
+    var summaryLower = String(notification.summary || "").toLowerCase()
+    if (syncHint === "volume" || syncHint === "brightness" || syncHint === "mic" || syncHint === "microphone" ||
+        summaryLower === "volume" || summaryLower === "brightness" || summaryLower === "microphone" || summaryLower === "mic") {
+      isOsd = true
+    }
+
+    if (isOsd) {
+      delete liveRefs[snapshot.originalId]
+      notification.tracked = false
+
+      var iconName = syncHint || summaryLower
+      if (iconName === "mic") iconName = "microphone"
+      var val = progressVal
+      if (val === "" && snapshot.body) {
+        var match = String(snapshot.body).match(/(\d+)%?/)
+        if (match) val = match[1]
+      }
+      var osdPayload = JSON.stringify({
+        icon: iconName,
+        value: val,
+        progressText: val ? (val + "%") : "",
+        message: val ? "" : snapshot.body,
+        duration: "1200"
+      })
+
+      Quickshell.execDetached(["quickshell", "ipc", "call", "--", "osd", "show", osdPayload])
+      return
+    }
     // History is for notifications from real apps (Slack, Discord, mailer,
     // etc.) — things the user might want to look back at. Skip the pending
     // / past bookkeeping when:
