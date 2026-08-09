@@ -98,15 +98,16 @@ hl.bind(
     hl.dsp.exec_cmd("hyprshutdown"),
     { description = "Exit Hyprland" }
 )
-for i = 1, 9 do
+for i = 1, 10 do
+    local key = i % 10 -- 10 maps to key 0
     hl.bind(
-        "SUPER + " .. i,
+        "SUPER + " .. key,
         hl.dsp.focus({ workspace = i }),
         { description = "Switch to workspace " .. i }
     )
 
     hl.bind(
-        "SUPER + SHIFT + " .. i,
+        "SUPER + SHIFT + " .. key,
         hl.dsp.window.move({ workspace = i }),
         { description = "Move window to workspace " .. i }
     )
