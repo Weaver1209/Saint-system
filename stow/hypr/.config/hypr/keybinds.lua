@@ -51,10 +51,29 @@ hl.bind("SUPER + K", hl.dsp.focus({ direction = "u" }))
 hl.bind("SUPER + J", hl.dsp.focus({ direction = "d" }))
 
 -- Move windows
-hl.bind("SUPER + SHIFT + H", hl.dsp.window.move({ direction = "l" }))
-hl.bind("SUPER + SHIFT + L", hl.dsp.window.move({ direction = "r" }))
-hl.bind("SUPER + SHIFT + K", hl.dsp.window.move({ direction = "u" }))
-hl.bind("SUPER + SHIFT + J", hl.dsp.window.move({ direction = "d" }))
+hl.bind("SUPER + SHIFT + LEFT", hl.dsp.window.move({ direction = "l" }))
+hl.bind("SUPER + SHIFT + RIGHT", hl.dsp.window.move({ direction = "r" }))
+hl.bind("SUPER + SHIFT + UP", hl.dsp.window.move({ direction = "u" }))
+hl.bind("SUPER + SHIFT + DOWN", hl.dsp.window.move({ direction = "d" }))
+
+-- Applications (SUPER + SHIFT + E, L, N)
+hl.bind(
+    "SUPER + SHIFT + E",
+    hl.dsp.exec_cmd("nautilus"),
+    { description = "Open Nautilus file manager" }
+)
+
+hl.bind(
+    "SUPER + SHIFT + L",
+    hl.dsp.exec_cmd("slack"),
+    { description = "Open Slack" }
+)
+
+hl.bind(
+    "SUPER + SHIFT + N",
+    hl.dsp.exec_cmd("ghostty -e nvim"),
+    { description = "Open Neovim" }
+)
 
 -- Exit
 hl.bind(
