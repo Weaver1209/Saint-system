@@ -86,6 +86,12 @@ hl.bind(
     hl.dsp.exec_cmd("$HOME/.local/bin/omarchy-launch-webapp https://web.whatsapp.com"),
     { description = "Open WhatsApp Web" }
 )
+
+hl.bind(
+    "SUPER + SHIFT + Y",
+    hl.dsp.exec_cmd("$HOME/.local/bin/omarchy-launch-webapp https://www.youtube.com"),
+    { description = "Open YouTube" }
+)
 -- Exit
 hl.bind(
     "SUPER + SHIFT + M",
