@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Hyprpaper
+Comment=Hyprland wallpaper daemon with random wallpaper selection
+Exec=/home/weaver/.config/hyprpaper/hyprpaper.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
