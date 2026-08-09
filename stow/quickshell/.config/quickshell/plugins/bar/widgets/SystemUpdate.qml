@@ -56,6 +56,7 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
+    foreground: "#f9e2af"
     text: "\uf021"
     slotSize: Style.bar.statusSlot
     fontSize: Style.font.caption

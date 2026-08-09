@@ -45,7 +45,7 @@ BarWidget {
     anchors.fill: parent
     anchors.rightMargin: root.trailingGap
     columns: root.vertical ? 1 : root.workspaceIds().length
-    columnSpacing: root.vertical ? 0 : Style.space(1)
+    columnSpacing: root.vertical ? 0 : Style.space(2)
     rowSpacing: root.vertical ? Style.space(2) : 0
 
     Repeater {
@@ -59,12 +59,16 @@ BarWidget {
         readonly property bool focused: Hyprland.focusedWorkspace !== null && Hyprland.focusedWorkspace.id === modelData
 
         bar: root.bar
-        text: focused ? "\uDB85\uDCFB" : (modelData === 10 ? "0" : String(modelData))
-        opacity: occupied || focused ? 1 : 0.5
+        text: modelData === 10 ? "0" : String(modelData)
+        active: focused
+        foreground: focused ? "#11111b" : (occupied ? "#cdd6f4" : "#6c7086")
+        activeColor: "#cba6f7"
+        useActiveColor: true
+        opacity: occupied || focused ? 1.0 : 0.55
         horizontalMargin: 6
-        verticalPadding: 6
-        fixedWidth: root.vertical ? root.barSize : Style.space(20)
-        fixedHeight: root.barSize
+        verticalPadding: 4
+        fixedWidth: root.vertical ? root.barSize : Style.space(22)
+        fixedHeight: root.vertical ? Style.space(22) : Math.max(16, root.barSize - Style.space(6))
         onPressed: function() { root.focusWorkspace(modelData) }
       }
     }

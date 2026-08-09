@@ -926,6 +926,7 @@ Panel {
     id: button
     anchors.fill: parent
     bar: root.bar
+    foreground: "#94e2d5"
     text: root.icon
 
     onPressed: function(b) {

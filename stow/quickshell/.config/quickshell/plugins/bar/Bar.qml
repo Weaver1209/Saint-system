@@ -1264,24 +1264,38 @@ Item {
           visible: centerRoot.hasAnchor
           entries: root.entriesBefore(centerRoot.entries, root.centerAnchor)
           region: "center"
-          anchors.right: centerAnchorModule.left
-          anchors.verticalCenter: centerAnchorModule.verticalCenter
+          anchors.right: centerAnchorWrapper.left
+          anchors.rightMargin: Style.space(4)
+          anchors.verticalCenter: centerAnchorWrapper.verticalCenter
         }
 
-        ModuleSlot {
-          id: centerAnchorModule
+        Rectangle {
+          id: centerAnchorWrapper
           visible: centerRoot.hasAnchor
-          entry: centerRoot.anchorEntry
-          region: "center"
+          implicitWidth: centerAnchorModule.implicitWidth + Style.space(12)
+          implicitHeight: Math.max(16, root.barSize - Style.space(6))
           anchors.centerIn: parent
+
+          color: Util.alpha("#181825", 0.85)
+          border.color: Util.alpha("#45475a", 0.60)
+          border.width: 1
+          radius: height / 2
+
+          ModuleSlot {
+            id: centerAnchorModule
+            anchors.centerIn: parent
+            entry: centerRoot.anchorEntry
+            region: "center"
+          }
         }
 
         ModuleList {
           visible: centerRoot.hasAnchor
           entries: root.entriesAfter(centerRoot.entries, root.centerAnchor)
           region: "center"
-          anchors.left: centerAnchorModule.right
-          anchors.verticalCenter: centerAnchorModule.verticalCenter
+          anchors.left: centerAnchorWrapper.right
+          anchors.leftMargin: Style.space(4)
+          anchors.verticalCenter: centerAnchorWrapper.verticalCenter
         }
       }
     }
@@ -1309,24 +1323,38 @@ Item {
           visible: centerRoot.hasAnchor
           entries: root.entriesBefore(centerRoot.entries, root.centerAnchor)
           region: "center"
-          anchors.bottom: centerAnchorModule.top
-          anchors.horizontalCenter: centerAnchorModule.horizontalCenter
+          anchors.bottom: centerAnchorWrapper.top
+          anchors.bottomMargin: Style.space(4)
+          anchors.horizontalCenter: centerAnchorWrapper.horizontalCenter
         }
 
-        ModuleSlot {
-          id: centerAnchorModule
+        Rectangle {
+          id: centerAnchorWrapper
           visible: centerRoot.hasAnchor
-          entry: centerRoot.anchorEntry
-          region: "center"
+          implicitWidth: Math.max(16, root.barSize - Style.space(6))
+          implicitHeight: centerAnchorModule.implicitHeight + Style.space(12)
           anchors.centerIn: parent
+
+          color: Util.alpha("#181825", 0.85)
+          border.color: Util.alpha("#45475a", 0.60)
+          border.width: 1
+          radius: width / 2
+
+          ModuleSlot {
+            id: centerAnchorModule
+            anchors.centerIn: parent
+            entry: centerRoot.anchorEntry
+            region: "center"
+          }
         }
 
         ModuleList {
           visible: centerRoot.hasAnchor
           entries: root.entriesAfter(centerRoot.entries, root.centerAnchor)
           region: "center"
-          anchors.top: centerAnchorModule.bottom
-          anchors.horizontalCenter: centerAnchorModule.horizontalCenter
+          anchors.top: centerAnchorWrapper.bottom
+          anchors.topMargin: Style.space(4)
+          anchors.horizontalCenter: centerAnchorWrapper.horizontalCenter
         }
       }
     }
@@ -1431,16 +1459,29 @@ Item {
     Component {
       id: horizontalModuleList
 
-      Row {
-        spacing: 0
+      Rectangle {
+        implicitWidth: row.implicitWidth + Style.space(8)
+        implicitHeight: Math.max(16, root.barSize - Style.space(6))
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
-        Repeater {
-          model: moduleListRoot.entries
+        color: Util.alpha("#181825", 0.85)
+        border.color: Util.alpha("#45475a", 0.60)
+        border.width: 1
+        radius: height / 2
 
-          ModuleSlot {
-            required property var modelData
-            entry: modelData
-            region: moduleListRoot.region
+        Row {
+          id: row
+          anchors.centerIn: parent
+          spacing: Style.space(2)
+
+          Repeater {
+            model: moduleListRoot.entries
+
+            ModuleSlot {
+              required property var modelData
+              entry: modelData
+              region: moduleListRoot.region
+            }
           }
         }
       }
@@ -1449,16 +1490,29 @@ Item {
     Component {
       id: verticalModuleList
 
-      Column {
-        spacing: 0
+      Rectangle {
+        implicitWidth: Math.max(16, root.barSize - Style.space(6))
+        implicitHeight: col.implicitHeight + Style.space(8)
+        anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
 
-        Repeater {
-          model: moduleListRoot.entries
+        color: Util.alpha("#181825", 0.85)
+        border.color: Util.alpha("#45475a", 0.60)
+        border.width: 1
+        radius: width / 2
 
-          ModuleSlot {
-            required property var modelData
-            entry: modelData
-            region: moduleListRoot.region
+        Column {
+          id: col
+          anchors.centerIn: parent
+          spacing: Style.space(2)
+
+          Repeater {
+            model: moduleListRoot.entries
+
+            ModuleSlot {
+              required property var modelData
+              entry: modelData
+              region: moduleListRoot.region
+            }
           }
         }
       }

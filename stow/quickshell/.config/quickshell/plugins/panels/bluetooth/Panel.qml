@@ -556,6 +556,7 @@ Panel {
     id: button
     anchors.fill: parent
     bar: root.bar
+    foreground: "#89b4fa"
     text: root.icon
     onPressed: function(b) {
       if (b === Qt.RightButton) root.toggleBluetooth()

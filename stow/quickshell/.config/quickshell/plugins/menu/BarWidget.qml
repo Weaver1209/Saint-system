@@ -1,4 +1,5 @@
 import QtQuick
+import qs.Commons
 import qs.Ui
 
 BarWidget {
@@ -12,13 +13,13 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
-    text: "\ue900"
-    fontFamily: "omarchy"
+    text: "\uF011"
+    fontFamily: Style.font.family
+    foreground: "#f38ba8"
     horizontalMargin: 7.5
     onPressed: function(button) {
       if (!root.bar) return
-      if (button === Qt.RightButton) root.bar.run("xdg-terminal-exec")
-      else root.bar.run("omarchy-shell shell toggle omarchy.menu '{\"menu\":\"root\"}'")
+      root.bar.run("wlogout || ~/.config/hypr/scripts/powermenu.sh")
     }
   }
 }

@@ -277,6 +277,7 @@ Panel {
     id: button
     anchors.fill: parent
     bar: root.bar
+    foreground: "#f38ba8"
     text: root.showPercentage && !vertical
       ? Math.round(root.batteryFraction * 100) + "% " + root.batteryIcon()
       : root.batteryIcon()

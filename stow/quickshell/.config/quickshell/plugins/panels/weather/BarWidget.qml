@@ -68,6 +68,7 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
+    foreground: "#89dceb"
     text: panelLoader.item ? panelLoader.item.label : ""
     slotSize: Style.bar.statusSlot
     // Tooltip suppressed because the panel is the detail view.

@@ -631,6 +631,7 @@ Panel {
     id: button
     anchors.fill: parent
     bar: root.bar
+    foreground: "#a6e3a1"
     text: root.outputIcon()
     onPressed: function(b) {
       if (b === Qt.RightButton) root.toggleOutputMute()

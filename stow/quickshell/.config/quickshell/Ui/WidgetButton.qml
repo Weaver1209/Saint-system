@@ -66,10 +66,26 @@ Item {
   visible: hasVisualContent || keepSpace
   opacity: !hasVisualContent || concealed ? 0 : (dimmed ? 0.45 : 1)
   implicitWidth: fixedWidth > 0 ? fixedWidth : (vertical ? barSize : Math.max(12, label.implicitWidth + scaledHorizontalMargin * 2))
-  implicitHeight: fixedHeight > 0 ? fixedHeight : (vertical ? Math.max(12, label.implicitHeight + scaledVerticalPadding * 2) : barSize)
+  implicitHeight: fixedHeight > 0 ? fixedHeight : (vertical ? Math.max(12, label.implicitHeight + scaledVerticalPadding * 2) : Math.max(16, barSize - Style.space(6)))
 
   Behavior on opacity {
     NumberAnimation { duration: 140; easing.type: Easing.OutCubic }
+  }
+
+  Rectangle {
+    id: bgRect
+    anchors.fill: parent
+    radius: Math.min(width, height) / 2
+    color: {
+      if (mouseArea.containsPress && root.pressable) return Util.alpha(root.foreground, 0.25)
+      if (mouseArea.containsMouse && root.interactive) return Util.alpha(root.foreground, 0.15)
+      if (root.active && root.useActiveColor) return root.activeColor
+      return "transparent"
+    }
+
+    Behavior on color {
+      ColorAnimation { duration: 150; easing.type: Easing.OutCubic }
+    }
   }
 
   Text {
@@ -77,7 +93,7 @@ Item {
     visible: root.labelVisible
     anchors.centerIn: parent
     text: root.text
-    color: root.active && root.useActiveColor ? root.activeColor : root.foreground
+    color: root.active && root.useActiveColor ? Color.background : root.foreground
     font.family: root.fontFamily
     font.pixelSize: root.fontSize
     renderType: Text.NativeRendering

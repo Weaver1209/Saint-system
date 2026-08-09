@@ -266,13 +266,13 @@ QtObject {
   // component follows the fontconfig alias `omarchy-font-set` writes.
   // Themes can override per-token via [font] in shell.toml, but the
   // family stays system-wide.
-  property string fontFamily: "Roboto"
+  property string fontFamily: "JetBrainsMono Nerd Font"
 
   // The concrete family `monospace` resolves to right now, e.g.
   // "JetBrainsMono Nerd Font". Bind `font.family` to `fontFamily` (so the
   // alias path keeps working when the user runs `omarchy font set`), but
   // read `resolvedFontFamily` when you want to *display* what's drawing.
-  property string resolvedFontFamily: "Roboto"
+  property string resolvedFontFamily: "JetBrainsMono Nerd Font"
 
   // The only sanity floor is 1px. Themes and users can make this as large
   // as they like; if the shell gets ridiculous, that's their call.
