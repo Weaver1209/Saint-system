@@ -75,6 +75,18 @@ hl.bind(
     { description = "Open Neovim" }
 )
 
+hl.bind(
+    "SUPER + SHIFT + W",
+    hl.dsp.exec_cmd("google-chrome-stable --app=https://web.whatsapp.com"),
+    { description = "Open WhatsApp Web" }
+)
+
+hl.bind(
+    "SUPER + SHIFT + O",
+    hl.dsp.exec_cmd("google-chrome-stable --app=https://web.whatsapp.com"),
+    { description = "Open WhatsApp Web" }
+)
+
 -- Exit
 hl.bind(
     "SUPER + SHIFT + M",
