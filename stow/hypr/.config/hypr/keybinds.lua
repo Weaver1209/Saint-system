@@ -77,13 +77,13 @@ hl.bind(
 
 hl.bind(
     "SUPER + SHIFT + O",
-    hl.dsp.exec_cmd("ghostty -e omp"),
+    hl.dsp.exec_cmd("ghostty -e $HOME/.local/bin/omp"),
     { description = "Open Oh My Pi (OMP)" }
 )
 
 hl.bind(
     "SUPER + SHIFT + W",
-    hl.dsp.exec_cmd("omarchy-launch-webapp https://web.whatsapp.com"),
+    hl.dsp.exec_cmd("$HOME/.local/bin/omarchy-launch-webapp https://web.whatsapp.com"),
     { description = "Open WhatsApp Web" }
 )
 -- Exit
