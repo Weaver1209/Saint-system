@@ -131,8 +131,9 @@ BarWidget {
 
   visible: pinnedItems.length > 0 || drawerCount > 0
   clip: false
+  readonly property real horizontalSlotHeight: Math.max(16, root.barSize - Style.space(6))
   implicitWidth: root.vertical ? root.barSize : trayContent.implicitWidth
-  implicitHeight: root.vertical ? trayContent.implicitHeight : root.barSize
+  implicitHeight: root.vertical ? trayContent.implicitHeight : horizontalSlotHeight
 
   Behavior on revealProgress {
     NumberAnimation { duration: root.animationDuration; easing.type: Easing.OutCubic }
@@ -154,7 +155,7 @@ BarWidget {
       readonly property int drawerBlockWidth: root.allItems.length > 0 ? expandIcon.implicitWidth + root.drawerExtent : 0
 
       implicitWidth: pinnedWidth + drawerBlockWidth
-      implicitHeight: root.barSize
+      implicitHeight: root.horizontalSlotHeight
 
       // Mask out the empty area the collapsed drawer reserves for its slide-in,
       // so hovering it doesn't trigger expand and clicks pass through.
@@ -175,7 +176,7 @@ BarWidget {
         id: drawerArea
         x: 0
         width: horizontalTrayRoot.drawerBlockWidth
-        height: root.barSize
+        height: root.horizontalSlotHeight
         visible: root.allItems.length > 0
 
         HoverHandler {
@@ -199,7 +200,7 @@ BarWidget {
           x: expandIcon.width
           anchors.verticalCenter: parent.verticalCenter
           width: root.drawerExtent
-          height: root.barSize
+          height: root.horizontalSlotHeight
           clip: true
 
           Row {

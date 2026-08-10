@@ -1481,6 +1481,7 @@ Item {
               required property var modelData
               entry: modelData
               region: moduleListRoot.region
+              anchors.verticalCenter: parent ? parent.verticalCenter : undefined
             }
           }
         }
