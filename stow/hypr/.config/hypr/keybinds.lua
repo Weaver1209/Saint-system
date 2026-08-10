@@ -181,27 +181,33 @@ hl.bind(
     { locked = true, description = "Stop media playback" }
 )
 
--- Screenshot (grim + slurp)
+-- Screenshot (grim + slurp - 4 distinct actions)
 hl.bind(
     "PRINT",
     hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh full"),
-    { description = "Fullscreen screenshot (save & clipboard)" }
+    { description = "1. Fullscreen screenshot (save file & clipboard)" }
+)
+
+hl.bind(
+    "CTRL + PRINT",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh full-clip"),
+    { description = "2. Fullscreen screenshot (clipboard only)" }
 )
 
 hl.bind(
     "SHIFT + PRINT",
     hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh region"),
-    { description = "Region screenshot (save & clipboard)" }
-)
-
-hl.bind(
-    "CTRL + PRINT",
-    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh clip"),
-    { description = "Region screenshot (clipboard only)" }
+    { description = "3. Region screenshot (save file & clipboard)" }
 )
 
 hl.bind(
     "SUPER + SHIFT + S",
-    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh clip"),
-    { description = "Region screenshot (clipboard only)" }
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh region-clip"),
+    { description = "4. Region screenshot (clipboard only)" }
+)
+
+hl.bind(
+    "ALT + PRINT",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh region-clip"),
+    { description = "4. Region screenshot (clipboard only)" }
 )
