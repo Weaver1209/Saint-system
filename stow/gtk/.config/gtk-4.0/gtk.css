@@ -1,3 +1,5 @@
+/* Catppuccin Mocha GTK 4 / Libadwaita Theme */
+
 @define-color accent_color #cba6f7;
 @define-color accent_bg_color #cba6f7;
 @define-color accent_fg_color #11111b;
@@ -49,8 +51,8 @@
 @define-color shade_color rgba(0, 0, 0, 0.36);
 @define-color scrollbar_outline_color rgba(0, 0, 0, 0.5);
 
-/* Nautilus GTK4 & Libadwaita Catppuccin Mocha Overrides */
-window, .background {
+/* Window & General Background */
+window, .background, .view, view, viewport, stack, .content-view, scrolledwindow {
     background-color: #1e1e2e;
     color: #cdd6f4;
 }
@@ -61,34 +63,167 @@ headerbar {
     border-bottom: 1px solid #11111b;
 }
 
-.sidebar, stacksidebar, navigation-sidebar {
+/* Sidebar Styling */
+.sidebar, stacksidebar, navigation-sidebar, placesview {
     background-color: #181825;
     color: #cdd6f4;
 }
 
-.sidebar row:selected, navigation-sidebar row:selected {
+.sidebar row, navigation-sidebar row, placesview row {
+    border-radius: 6px;
+    padding: 6px 8px;
+    color: #cdd6f4;
+}
+
+.sidebar row:hover, navigation-sidebar row:hover, placesview row:hover {
+    background-color: #313244;
+    color: #cdd6f4;
+}
+
+.sidebar row:selected, navigation-sidebar row:selected, placesview row:selected {
+    background-color: #45475a;
+    color: #cba6f7;
+    font-weight: bold;
+}
+
+/* File Chooser, Lists & Column Views */
+filechooser, GtkFileChooserWidget, columnview, listview, gridview, treeview {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+columnview row, listview row, treeview.view {
+    color: #cdd6f4;
+}
+
+columnview row:hover, listview row:hover, treeview.view:hover {
+    background-color: #313244;
+}
+
+columnview row:selected, listview row:selected, gridview child:selected, treeview.view:selected {
+    background-color: #45475a;
+    color: #cba6f7;
+}
+
+/* Path Bar / Breadcrumbs in GTK4 File Picker */
+.path-bar button, filechooser .path-bar button {
+    background-color: transparent;
+    color: #cdd6f4;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+.path-bar button:hover, filechooser .path-bar button:hover {
     background-color: #313244;
     color: #cba6f7;
 }
 
+.path-bar button:checked, .path-bar button:active, filechooser .path-bar button:checked {
+    background-color: #45475a;
+    color: #cba6f7;
+    font-weight: bold;
+}
+
+/* Entries and Search Bars */
 entry, searchbar {
+    background-color: #181825;
+    color: #cdd6f4;
+    border: 1px solid #45475a;
+    border-radius: 8px;
+}
+
+entry:focus-within, searchbar:focus-within {
+    border-color: #cba6f7;
+}
+
+/* Buttons */
+button {
     background-color: #313244;
     color: #cdd6f4;
     border: 1px solid #45475a;
     border-radius: 8px;
 }
 
-button {
-    background-color: #313244;
+button:hover {
+    background-color: #45475a;
     color: #cdd6f4;
+}
+
+button:active, button:checked {
+    background-color: #585b70;
+    color: #cba6f7;
+}
+
+button.suggested-action {
+    background-color: #cba6f7;
+    color: #11111b;
+    border: none;
+    font-weight: bold;
+}
+
+button.suggested-action:hover {
+    background-color: #b4befe;
+    color: #11111b;
+}
+
+button.destructive-action {
+    background-color: #f38ba8;
+    color: #11111b;
+    border: none;
+    font-weight: bold;
+}
+
+button.destructive-action:hover {
+    background-color: #eba0ac;
+    color: #11111b;
+}
+
+button.flat {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+button.flat:hover {
+    background-color: #313244;
+}
+
+/* Popovers & Menus */
+popover {
+    background-color: #181825;
+    color: #cdd6f4;
+    border: 1px solid #45475a;
     border-radius: 8px;
 }
 
-button:hover {
-    background-color: #45475a;
+popover contents {
+    background-color: #181825;
+    color: #cdd6f4;
 }
 
-button:suggested-action {
+popover modelbutton {
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: #cdd6f4;
+}
+
+popover modelbutton:hover {
+    background-color: #313244;
+    color: #cba6f7;
+}
+
+/* Scrollbars */
+scrollbar slider {
+    background-color: #45475a;
+    border-radius: 4px;
+    min-width: 6px;
+    min-height: 6px;
+}
+
+scrollbar slider:hover {
+    background-color: #585b70;
+}
+
+scrollbar slider:active {
     background-color: #cba6f7;
-    color: #11111b;
 }
