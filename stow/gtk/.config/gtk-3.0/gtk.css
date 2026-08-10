@@ -194,10 +194,13 @@ popover, menu, .menu {
     color: #cdd6f4;
     border: 1px solid #45475a;
     border-radius: 8px;
+    padding: 4px;
 }
 
 popover modelbutton, menuitem {
-    padding: 6px 10px;
+    min-height: 24px;
+    padding: 4px 8px;
+    margin: 1px 0;
     border-radius: 4px;
     color: #cdd6f4;
 }
