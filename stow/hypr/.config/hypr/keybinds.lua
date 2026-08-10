@@ -180,3 +180,28 @@ hl.bind(
     hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/media-control.sh stop"),
     { locked = true, description = "Stop media playback" }
 )
+
+-- Screenshot (grim + slurp)
+hl.bind(
+    "PRINT",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh full"),
+    { description = "Fullscreen screenshot (save & clipboard)" }
+)
+
+hl.bind(
+    "SHIFT + PRINT",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh region"),
+    { description = "Region screenshot (save & clipboard)" }
+)
+
+hl.bind(
+    "CTRL + PRINT",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh clip"),
+    { description = "Region screenshot (clipboard only)" }
+)
+
+hl.bind(
+    "SUPER + SHIFT + S",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh clip"),
+    { description = "Region screenshot (clipboard only)" }
+)
