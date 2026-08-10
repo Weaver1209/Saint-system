@@ -10,4 +10,4 @@ case "$1" in
 esac
 
 bright=$(brightnessctl -m | cut -d',' -f4 | tr -d '%')
-omarchy-osd -i brightness -p "$bright" 2>/dev/null || notify-send -h string:x-canonical-private-synchronous:brightness -h int:value:"$bright" -u low -i display-brightness "Brightness" "${bright}%"
+kiku-osd -i brightness -p "$bright" 2>/dev/null || notify-send -h string:x-canonical-private-synchronous:brightness -h int:value:"$bright" -u low -i display-brightness "Brightness" "${bright}%"
