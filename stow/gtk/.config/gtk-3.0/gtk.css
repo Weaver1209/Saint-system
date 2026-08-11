@@ -21,7 +21,7 @@
 @define-color headerbar_fg_color #cdd6f4;
 
 /* Base Window, Dialog & Container Styling */
-window, dialog, .background, .view, view, viewport, stack, .content-view, scrolledwindow {
+window, dialog, .background, .view, view, viewport, stack, .content-view, scrolledwindow, list, listbox, row, listrow, listboxrow, GtkListBox, GtkListBoxRow {
     background-color: #1e1e2e;
     color: #cdd6f4;
 }
@@ -97,22 +97,26 @@ treeview.view header button:hover {
 }
 
 /* Path bar (Breadcrumbs at top of File Picker) */
-.path-bar button {
+pathbar, .path-bar, GtkPathBar {
     background-color: transparent;
+}
+
+.path-bar button, pathbar button, GtkPathBar button {
+    background-color: #313244;
     color: #cdd6f4;
-    border: 1px solid transparent;
+    border: 1px solid #45475a;
     border-radius: 6px;
     padding: 4px 8px;
     margin: 0 2px;
 }
 
-.path-bar button:hover {
-    background-color: #313244;
+.path-bar button:hover, pathbar button:hover, GtkPathBar button:hover {
+    background-color: #45475a;
     color: #cba6f7;
 }
 
-.path-bar button:checked, .path-bar button:active {
-    background-color: #45475a;
+.path-bar button:checked, .path-bar button:active, pathbar button:checked, GtkPathBar button:checked {
+    background-color: #585b70;
     color: #cba6f7;
     font-weight: bold;
 }
@@ -184,11 +188,17 @@ button.flat:hover {
 }
 
 /* Combobox & Dropdowns */
-combobox button, dropdown button {
+combobox, combobox button, combobox cell, combobox entry, dropdown button {
     background-color: #313244;
     color: #cdd6f4;
+    border: 1px solid #45475a;
+    border-radius: 6px;
 }
 
+combobox menu, combobox popover, combobox list, combobox window {
+    background-color: #181825;
+    color: #cdd6f4;
+}
 popover, menu, .menu {
     background-color: #181825;
     color: #cdd6f4;
