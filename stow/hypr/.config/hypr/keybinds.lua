@@ -80,6 +80,11 @@ hl.bind(
     hl.dsp.exec_cmd("ghostty -e $HOME/.local/bin/omp"),
     { description = "Open Oh My Pi (OMP)" }
 )
+hl.bind(
+    "SUPER + SHIFT + S",
+    hl.dsp.exec_cmd("spotify"),
+    { description = "Open Spotify" }
+)
 
 hl.bind(
     "SUPER + SHIFT + W",
@@ -198,12 +203,6 @@ hl.bind(
     "SHIFT + PRINT",
     hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh region"),
     { description = "3. Region screenshot (save file & clipboard)" }
-)
-
-hl.bind(
-    "SUPER + SHIFT + S",
-    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh region-clip"),
-    { description = "4. Region screenshot (clipboard only)" }
 )
 
 hl.bind(
