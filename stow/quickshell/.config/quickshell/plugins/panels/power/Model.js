@@ -46,7 +46,10 @@ function profileIcon(name) {
 }
 
 function batteryFraction(device) {
-  return device && device.isPresent ? Math.max(0, Math.min(1, device.percentage)) : 0
+  if (!device || !device.isPresent) return 0
+  var p = Number(device.percentage || 0)
+  if (p > 1.0) p = p / 100.0
+  return Math.max(0, Math.min(1, p))
 }
 
 function chargeThresholdActive(device, onBattery, states) {

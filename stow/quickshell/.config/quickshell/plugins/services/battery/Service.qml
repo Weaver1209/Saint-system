@@ -36,7 +36,7 @@ Item {
   function sendLowBatteryWarning(level) {
     if (warningProcess.running) return
     warningProcess.command = [
-      "omarchy-battery-low",
+      "kiku-battery-low",
       String(level)
     ]
     warningProcess.running = true
@@ -48,7 +48,7 @@ Item {
   }
 
   function runPendingPowerProfile() {
-    powerProfileProcess.command = ["omarchy-powerprofiles-set", pendingPowerSource]
+    powerProfileProcess.command = ["kiku-powerprofiles-set", pendingPowerSource]
     pendingPowerSource = ""
     powerProfileProcess.running = true
   }
