@@ -5,7 +5,7 @@ import "NightlightModel.js" as NightlightModel
 Item {
   id: root
 
-  // Injected by omarchy-shell (the first-party service loader).
+  // Injected by kiku-shell (the first-party service loader).
   property var shell: null
 
   // Keep in sync with bin/omarchy-toggle-nightlight, which sets the same

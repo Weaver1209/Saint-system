@@ -1,4 +1,8 @@
 hl.config({
+    xwayland = {
+        force_zero_scaling = true,
+    },
+
     general = {
         gaps_in = 3,
         gaps_out = 2,

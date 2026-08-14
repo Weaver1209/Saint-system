@@ -196,7 +196,7 @@ Item {
       color: "transparent"
       // Keep render updates enabled. The background layer has been observed to
       // lose its committed buffer while parked with updatesEnabled=false,
-      // leaving a black desktop until omarchy-shell is restarted. The wallpaper
+      // leaving a black desktop until kiku-shell is restarted. The wallpaper
       // itself is static, so this favors correctness over a small render-loop
       // optimization.
       updatesEnabled: true

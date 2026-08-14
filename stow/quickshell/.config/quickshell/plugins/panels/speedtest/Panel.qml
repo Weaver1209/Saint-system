@@ -11,7 +11,7 @@ import qs.Ui
 // stops the traffic, so the download workers never keep saturating the link
 // behind a closed overlay. The payload may carry the connection's display
 // name -- {"connection": "MyWifi"} -- and the panel looks it up itself via
-// omarchy-network-status when the caller doesn't know it.
+// kiku-network-status when the caller doesn't know it.
 Item {
   id: root
 
@@ -99,7 +99,7 @@ Item {
     expectedStop = false
     phase = nextPhase
     stderrText = ""
-    speedTestProc.command = ["omarchy-network-speedtest", nextPhase]
+    speedTestProc.command = ["kiku-network-speedtest", nextPhase]
     speedTestProc.running = true
     phaseTimer.restart()
   }
@@ -171,7 +171,7 @@ Item {
   // field is the kind, second the SSID (wifi) or device (ethernet).
   Process {
     id: statusProc
-    command: ["omarchy-network-status"]
+    command: ["kiku-network-status"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
@@ -184,7 +184,7 @@ Item {
 
   SpeedTestOverlay {
     fontFamily: Style.font.family
-    layerNamespace: "omarchy-network-speedtest"
+    layerNamespace: "kiku-network-speedtest"
     title: root.connectionName
     leftLabel: "DOWNLOAD"
     rightLabel: "UPLOAD"

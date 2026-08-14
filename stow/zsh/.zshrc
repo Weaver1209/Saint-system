@@ -53,3 +53,7 @@ fi
 if command -v starship &>/dev/null; then
   eval "$(starship init zsh)"
 fi
+
+export PATH=$PATH:/home/weaver/.spicetify
+
+. "$HOME/.local/share/../bin/env"

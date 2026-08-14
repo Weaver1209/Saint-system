@@ -32,7 +32,7 @@ Panel {
   property var info: ({})  // { iface, type, ip, prefix, gateway, speed, duplex, ssid, signal, freq, bitrate, rx_bytes, tx_bytes, router_ping_ms, internet_ping_ms }
 
   // Throughput tracking. Rates are computed as deltas between successive
-  // `omarchy-network-status --verbose` samples (~1.5s apart via detailsPoll).
+  // `kiku-network-status --verbose` samples (~1.5s apart via detailsPoll).
   // We hold "prev" alongside a timestamp so the first sample after open or
   // after an interface switch doesn't manufacture a spike.
   property real prevRxBytes: 0
@@ -75,7 +75,7 @@ Panel {
   property bool wifiStationAvailable: false
   property string dnsProvider: ""
   property string pendingDnsProvider: ""
-  // Wi-Fi band state from `omarchy-network-band`. `bandCurrent` is the band
+  // Wi-Fi band state from `kiku-network-band`. `bandCurrent` is the band
   // the radio is actually on; `bandSelected` is the pinned choice ("auto" when
   // nothing is pinned), and the two differ whenever Auto is in effect.
   property string bandCurrent: ""
@@ -138,7 +138,7 @@ Panel {
   readonly property bool speedHeaderHasCursor: cursorActive && focusSection === "header" && headerIndex === speedHeaderIndex
   readonly property bool toggleHeaderHasCursor: cursorActive && focusSection === "header" && headerIndex === toggleHeaderIndex
   readonly property string toggleHint: Networking.wifiEnabled ? "Turn Wi-Fi off" : "Turn Wi-Fi on"
-  readonly property var dnsProviders: ["DHCP", "Cloudflare", "Google", "Custom"]
+  readonly property var dnsProviders: ["DHCP", "Cloudflare", "Quad9", "AdGuard", "Google", "Custom"]
   property int dnsIndex: 0
   // ["2.4", "5", ...], or empty when there is nothing to choose between.
   // Wi-Fi only: on Ethernet the band of a secondary radio is not what the
@@ -449,7 +449,7 @@ Panel {
       dnsProc.running = true
     }
     if (!bandProc.running) {
-      bandProc.command = ["omarchy-network-band"]
+      bandProc.command = ["kiku-network-band"]
       bandProc.running = true
     }
     if (wifiDevice) {
@@ -612,7 +612,7 @@ Panel {
     if (!band || actionProc.running) return
 
     root.pendingBand = band
-    actionProc.command = ["omarchy-network-band", band]
+    actionProc.command = ["kiku-network-band", band]
     actionProc.running = true
   }
 
@@ -630,23 +630,25 @@ Panel {
   }
 
   function dnsCommand(provider) {
-    var command = "omarchy-dns"
+    var command = "kiku-dns"
     if (provider) command += " " + Util.shellQuote(provider)
     return command
   }
 
   function setDns(provider) {
-    if (!root.bar || !provider || actionProc.running) return
+    if (!provider || actionProc.running) return
 
     if (provider === "Custom") {
-      var launcher = "omarchy-launch-floating-terminal-with-presentation"
-      root.bar.run(launcher + " " + Util.shellQuote(root.dnsCommand(provider)))
+      var launcher = "ghostty -e kiku-dns Custom"
+      if (root.bar) {
+        root.bar.run(launcher)
+      }
       root.close()
       return
     }
 
     root.pendingDnsProvider = provider
-    actionProc.command = ["bash", "-c", root.dnsCommand(provider)]
+    actionProc.command = ["kiku-dns", provider]
     actionProc.running = true
     root.close()
   }
@@ -780,7 +782,7 @@ Panel {
   // Pulls everything we want about the active route's interface in one shot.
   Process {
     id: detailsProc
-    command: ["omarchy-network-status", "--verbose"]
+    command: ["kiku-network-status", "--verbose"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: root.updateDetails(text)
@@ -829,7 +831,7 @@ Panel {
     running: root.opened
     onTriggered: {
       if (bandProc.running) return
-      bandProc.command = ["omarchy-network-band"]
+      bandProc.command = ["kiku-network-band"]
       bandProc.running = true
     }
   }
@@ -998,20 +1000,23 @@ Panel {
               root.focusSection = "dns"
             }
           } else if (root.focusSection === "dns") {
-            // k from DNS moves up into the band section when it's on screen,
-            // then the disconnect button; otherwise stays put. j drops into the
-            // wifi list if there's anywhere to land.
             if (dy < 0) {
-              if (root.canSelectBand) {
+              if (root.dnsIndex >= 3) {
+                root.dnsIndex -= 3
+              } else if (root.canSelectBand) {
                 root.focusSection = "band"
                 root.bandAutoFocused = !root.bandPillsVisible
               } else if (root.headerActionCount > 0) {
                 root.focusSection = "header"
                 root.headerIndex = 0
               }
-            } else if (root.wifiNetworks.length > 0) {
-              root.focusSection = "wifi"
-              if (root.selectedIndex < 0) root.selectedIndex = 0
+            } else {
+              if (root.dnsIndex < 3 && root.dnsProviders.length > 3) {
+                root.dnsIndex = Math.min(root.dnsProviders.length - 1, root.dnsIndex + 3)
+              } else if (root.wifiNetworks.length > 0) {
+                root.focusSection = "wifi"
+                if (root.selectedIndex < 0) root.selectedIndex = 0
+              }
             }
           } else {  // wifi
             // k from the top row escapes back up to the DNS row rather than
@@ -1380,44 +1385,37 @@ Panel {
           fontFamily: root.bar.fontFamily
         }
 
-        Row {
-          id: dnsRow
+        Grid {
+          id: dnsGrid
           width: parent.width
+          columns: 3
           spacing: Style.space(6)
 
-          readonly property int count: 4
-          readonly property real cellWidth: (width - spacing * (count - 1)) / count
+          readonly property real cellWidth: Math.floor((width - spacing * (columns - 1)) / columns)
 
-          DnsProviderPill {
-            provider: "DHCP"
-            index: 0
-            tooltipText: "Use DNS from DHCP"
-            width: dnsRow.cellWidth
-            onClicked: root.setDns(provider)
-          }
+          Repeater {
+            model: root.dnsProviders
 
-          DnsProviderPill {
-            provider: "Cloudflare"
-            index: 1
-            tooltipText: "Set DNS to Cloudflare"
-            width: dnsRow.cellWidth
-            onClicked: root.setDns(provider)
-          }
+            delegate: Item {
+              required property var modelData
+              required property int index
+              width: dnsGrid.cellWidth
+              height: dnsPill.implicitHeight
 
-          DnsProviderPill {
-            provider: "Google"
-            index: 2
-            tooltipText: "Set DNS to Google"
-            width: dnsRow.cellWidth
-            onClicked: root.setDns(provider)
-          }
-
-          DnsProviderPill {
-            provider: "Custom"
-            index: 3
-            tooltipText: "Set custom DNS servers"
-            width: dnsRow.cellWidth
-            onClicked: root.setDns(provider)
+              DnsProviderPill {
+                id: dnsPill
+                provider: modelData
+                index: index
+                tooltipText: modelData === "DHCP" ? "Use DNS from DHCP (Default)"
+                  : modelData === "Cloudflare" ? "Cloudflare (1.1.1.1) - Fast & Private"
+                  : modelData === "Quad9" ? "Quad9 (9.9.9.9) - Malware Blocking & Privacy"
+                  : modelData === "AdGuard" ? "AdGuard (94.140.14.14) - Ad & Tracker Blocking"
+                  : modelData === "Google" ? "Google (8.8.8.8) - Global Anycast DNS"
+                  : "Set custom DNS servers"
+                width: parent.width
+                onClicked: root.setDns(provider)
+              }
+            }
           }
         }
       }

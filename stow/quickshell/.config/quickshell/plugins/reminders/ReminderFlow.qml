@@ -74,7 +74,7 @@ Item {
       }
 
       if (!nextMinutes) {
-        Quickshell.execDetached([root.omarchyPath + "/bin/omarchy-notification-send", "Invalid reminder", "Enter the number of minutes"])
+        Quickshell.execDetached([root.omarchyPath + "/bin/kiku-notification-send", "Invalid reminder", "Enter the number of minutes"])
         return
       }
 

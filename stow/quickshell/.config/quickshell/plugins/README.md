@@ -57,11 +57,11 @@ other caller that wants to present a directory of images with previews.
 
 Two ways to drive it:
 
-- Shell-level summon: `omarchy-shell shell summon omarchy.image-picker '<jsonPayload>'`.
+- Shell-level summon: `kiku-shell shell summon omarchy.image-picker '<jsonPayload>'`.
   The payload can carry `imageDirs`, `imageRows`, `selectedImage`,
   `selectionFile`, `doneFile`, `showLabels`, `filterable`. Best for
   in-shell callers that already speak JSON.
-- Direct IPC target: `omarchy-shell image-selector open <imageDirs> <imageRowsB64> <selectedImage> <selectionFile> <doneFile> <showLabels> <filterable>`.
+- Direct IPC target: `kiku-shell image-selector open <imageDirs> <imageRowsB64> <selectedImage> <selectionFile> <doneFile> <showLabels> <filterable>`.
   Positional args; `imageRowsB64` is base64-encoded so embedded newlines /
   tabs survive the bash argv handoff. This is what `omarchy-menu-images`
   uses. Colors come from the central shell theme singleton; there is no
@@ -88,15 +88,15 @@ colors, blurred wallpaper, placeholder, and Hyprland-driven corners.
 
 Theme-aware authentication dialog for privileged actions. It uses
 Quickshell's native `Quickshell.Services.Polkit.PolkitAgent` backend and
-runs inside the long-lived `omarchy-shell` process, replacing the old
+runs inside the long-lived `kiku-shell` process, replacing the old
 `polkit-gnome-authentication-agent-1` autostart.
 
 ## Omarchy menu
 
 Quickshell-powered Omarchy command menu.
 The menu UI lives in `menu/Menu.qml` as a first-party `menu` plugin and is
-summoned through the shell (`omarchy-shell shell summon omarchy.menu ...`),
-so it shares the long-running `omarchy-shell` process instead of starting a
+summoned through the shell (`kiku-shell shell summon omarchy.menu ...`),
+so it shares the long-running `kiku-shell` process instead of starting a
 second Quickshell instance.
 
 The menu definition lives outside the shell host code:

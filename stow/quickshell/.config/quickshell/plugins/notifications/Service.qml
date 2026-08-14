@@ -14,7 +14,7 @@ import "NotificationLogic.js" as NotificationLogic
 Item {
   id: service
 
-  // Injected by omarchy-shell (the first-party service loader).
+  // Injected by kiku-shell (the first-party service loader).
   property var shell: null
 
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
@@ -519,7 +519,7 @@ Item {
   function focusApp(entry) {
     if (!entry || !entry.app) return
     focusAppProc.command = [
-      service.omarchyPath + "/bin/omarchy-hyprland-focus-app",
+      service.omarchyPath + "/bin/kiku-hyprland-focus-app",
       String(entry.app)
     ]
     focusAppProc.running = true

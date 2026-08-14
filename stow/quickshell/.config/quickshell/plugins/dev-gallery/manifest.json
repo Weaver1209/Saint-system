@@ -4,7 +4,7 @@
   "name": "Dev gallery",
   "version": "1.0.0",
   "author": "Omarchy",
-  "description": "Visual reference for omarchy-shell common UI components. Summon with: omarchy-shell shell summon omarchy.dev-gallery '{}' (or run: omarchy dev ui-preview).",
+  "description": "Visual reference for kiku-shell common UI components. Summon with: kiku-shell shell summon omarchy.dev-gallery '{}' (or run: omarchy dev ui-preview).",
   "kinds": [
     "panel"
   ],

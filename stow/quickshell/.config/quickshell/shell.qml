@@ -21,7 +21,7 @@ ShellRoot {
 
   property string home: Quickshell.env("HOME")
 
-  // The omarchy-shell host is the long-running entry point. Plugins live in
+  // The kiku-shell host is the long-running entry point. Plugins live in
   // sibling directories under plugins/. OMARCHY_PATH is provided by the uwsm
   // session environment and is the single source of truth for this checkout.
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
@@ -139,7 +139,7 @@ ShellRoot {
   }
 
   Component.onCompleted: {
-    console.log("omarchy-shell paths",
+    console.log("kiku-shell paths",
       "omarchyPath=" + shell.omarchyPath,
       "shellDir=" + Quickshell.shellDir,
       "firstPartyPluginsDir=" + shell.firstPartyPluginsDir,

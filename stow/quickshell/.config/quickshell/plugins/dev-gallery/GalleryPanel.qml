@@ -4,9 +4,9 @@ import Quickshell
 import qs.Ui
 import qs.Commons
 
-// Visual reference + live playground for omarchy-shell's common UI
+// Visual reference + live playground for kiku-shell's common UI
 // components. Summon with `omarchy dev ui-preview`, or directly via:
-//   omarchy-shell shell summon omarchy.dev-gallery "{}"
+//   kiku-shell shell summon omarchy.dev-gallery "{}"
 //
 // Every section here renders the REAL component (not a copy) so the
 // gallery doubles as a smoke test. When you add a new common component,

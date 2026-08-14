@@ -11,7 +11,7 @@ import "BarModel.js" as BarModel
 Item {
   id: root
 
-  // The omarchy-shell host injects omarchyPath from OMARCHY_PATH.
+  // The kiku-shell host injects omarchyPath from OMARCHY_PATH.
   required property string omarchyPath
   // Injected by the host shell so bar slots can resolve enabled widgets.
   required property var barWidgetRegistry
@@ -798,7 +798,7 @@ Item {
     if (!requestedTransparent || transparentForegroundProc.running) return
 
     transparentForegroundProc.command = [
-      "omarchy-bar-text-color",
+      "kiku-bar-text-color",
       root.position,
       String(root.barSize),
       colorHex(root.themeForeground),
@@ -901,7 +901,7 @@ Item {
 
   // Presence of the `bar-off` flag = bar hidden. Watching the parent toggles
   // directory because FileView can't observe a file that doesn't exist yet,
-  // and the flag is created/removed by `omarchy-toggle-bar`.
+  // and the flag is created/removed by `kiku-toggle-bar`.
   Process {
     id: barHiddenProbe
     running: true
@@ -974,7 +974,7 @@ Item {
     implicitHeight: root.vertical ? 0 : root.barSize
     color: root.transparent ? "transparent" : root.background
     surfaceFormat.opaque: false
-    WlrLayershell.namespace: "omarchy-bar"
+    WlrLayershell.namespace: "kiku-bar"
     WlrLayershell.layer: WlrLayer.Top
 
     Loader {
@@ -1107,7 +1107,7 @@ Item {
     visible: active && sourceItem !== null
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.namespace: "omarchy-bar-drag-ghost"
+    WlrLayershell.namespace: "kiku-bar-drag-ghost"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
@@ -1169,7 +1169,7 @@ Item {
     visible: root.barMoveActive && screenMatches
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.namespace: "omarchy-bar-move-ghost"
+    WlrLayershell.namespace: "kiku-bar-move-ghost"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 

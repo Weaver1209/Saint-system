@@ -97,7 +97,7 @@ only adds the meter and the spent-of-funded line under the real figure.
 - Bar icon: left = panel, right = refresh, middle = next subscription.
 - Panel: `h`/`l` switch subscription, `j`/`k` scroll, `r` or Enter refresh,
   Tab moves to the neighboring bar panel, Esc closes.
-- IPC: `omarchy-shell omarchy.agents <open|close|toggle|refresh|next>`.
+- IPC: `kiku-shell omarchy.agents <open|close|toggle|refresh|next>`.
 
 ## Settings
 

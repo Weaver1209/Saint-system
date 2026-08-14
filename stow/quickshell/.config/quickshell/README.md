@@ -1,6 +1,6 @@
 # Omarchy shell
 
-`omarchy-shell` is a single long-running [Quickshell](https://quickshell.org/)
+`kiku-shell` is a single long-running [Quickshell](https://quickshell.org/)
 instance that hosts the Omarchy desktop. Hyprland autostart launches one shell
 per graphical session; everything else — the bar, background switcher, panels,
 and overlays — runs **inside** the shell as a plugin.
@@ -104,7 +104,7 @@ omarchy plugin update                    # updates every git-managed plugin
 omarchy plugin remove acme.weather
 ```
 
-> ⚠️ **Plugins run as unsandboxed code inside `omarchy-shell`.** Adding warns
+> ⚠️ **Plugins run as unsandboxed code inside `kiku-shell`.** Adding warns
 > you before cloning, plugins land disabled so you can review the code before
 > enabling, and updates show a diff of the changes before touching anything.
 > Only add repos whose code you are willing to run.
@@ -130,13 +130,13 @@ You can still drop a plugin in without git:
 
 1. Put it in `~/.config/omarchy/plugins/<plugin-id>/` with a `manifest.json`
    plus the QML referenced from its `entryPoints`.
-2. `omarchy-shell shell rescanPlugins`.
+2. `kiku-shell shell rescanPlugins`.
 3. `omarchy plugin enable <id>`. Bar widgets start in
    `barWidget.defaultSection`, or in the center when it is omitted, and can be
    moved with `omarchy bar move`; a full bar replaces the one in use.
 
-The lower-level IPC equivalents remain available via `omarchy-shell shell rescanPlugins`,
-`omarchy-shell shell enablePlugin <id> '{}'`, and `omarchy-shell shell listPlugins`.
+The lower-level IPC equivalents remain available via `kiku-shell shell rescanPlugins`,
+`kiku-shell shell enablePlugin <id> '{}'`, and `kiku-shell shell listPlugins`.
 The `omarchy plugin` commands wrap those calls. `omarchy bar move` and
 `omarchy bar set` edit the persisted widget layout in `shell.json`.
 
@@ -158,7 +158,7 @@ Existing shortcuts and shell IPC calls made to the built-in id are routed to
 the enabled clone, so cloning does not require changing its callers. Removing
 an active clone switches back to its built-in source.
 Saving a file anywhere under `~/.config/omarchy/plugins/` reloads plugin code
-automatically; `omarchy-shell shell rescanPlugins` remains available to force a reload.
+automatically; `kiku-shell shell rescanPlugins` remains available to force a reload.
 
 First-party plugins under `shell/plugins/` are discovered the same way and load
 by default. Disabling a non-widget records it in `disabledPlugins[]`; disabling
@@ -195,14 +195,14 @@ Hyprland autostart launches the shell directly with `quickshell -p
 $OMARCHY_PATH/shell`. Use `omarchy-restart-shell` to stop every running
 instance of that config and launch one fresh shell process.
 
-A convenience wrapper, [`omarchy-shell`](../bin/omarchy-shell), forwards IPC
+A convenience wrapper, [`kiku-shell`](../bin/kiku-shell), forwards IPC
 calls to the running shell. It does not start the shell.
 
 ```
-omarchy-shell shell ping
-omarchy-shell shell toggle omarchy.menu '{"menu":"root"}'
-omarchy-shell shell listPlugins
-omarchy-shell shell rescanPlugins
+kiku-shell shell ping
+kiku-shell shell toggle omarchy.menu '{"menu":"root"}'
+kiku-shell shell listPlugins
+kiku-shell shell rescanPlugins
 ```
 
 **Note on `setPluginEnabled`:** the `enabled` argument is a string. Only the
@@ -284,14 +284,14 @@ becomes the authoritative file — we do **not** deep-merge defaults back in.
 
 Built up in phases on this branch:
 
-- Phase 1 — `omarchy-shell phase 1: host the existing bar in a single shell`
-- Phase 2 — `omarchy-shell phase 2: plugin registry and bar widget registry`
-- Phase 3 — `omarchy-shell phase 3: fold bar-settings into the shell as a panel plugin`
-- Phase 4 — `omarchy-shell phase 4: absorb background-switcher as a plugin`
-- Phase 5 — `omarchy-shell phase 5: docs, cleanup, and migration crumbs`
-- Phase 6 — `omarchy-shell phase 6: reviewer cleanup (path traversal, collision, races)`
-- Phase 7 — `omarchy-shell phase 7: replace socket with IpcHandler, rename to image-picker`
-- Phase 8a — `omarchy-shell phase 8a: unified shell.json with inline plugin settings`
+- Phase 1 — `kiku-shell phase 1: host the existing bar in a single shell`
+- Phase 2 — `kiku-shell phase 2: plugin registry and bar widget registry`
+- Phase 3 — `kiku-shell phase 3: fold bar-settings into the shell as a panel plugin`
+- Phase 4 — `kiku-shell phase 4: absorb background-switcher as a plugin`
+- Phase 5 — `kiku-shell phase 5: docs, cleanup, and migration crumbs`
+- Phase 6 — `kiku-shell phase 6: reviewer cleanup (path traversal, collision, races)`
+- Phase 7 — `kiku-shell phase 7: replace socket with IpcHandler, rename to image-picker`
+- Phase 8a — `kiku-shell phase 8a: unified shell.json with inline plugin settings`
 
 Shared services and Pipewire/UPower/Hyprland consolidation are explicitly
 out of scope here and deferred to a follow-up after a review pass.
