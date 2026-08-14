@@ -1533,11 +1533,11 @@ Panel {
     required property int index
 
     text: provider
-    fontSize: Style.font.bodySmall
-    foreground: root.bar.foreground
-    fontFamily: root.bar.fontFamily
-    horizontalPadding: Style.spacing.controlPaddingX
-    verticalPadding: Style.spacing.controlPaddingY + Style.space(2)
+    fontSize: Style.font.caption
+    foreground: root.bar ? root.bar.foreground : Color.foreground
+    fontFamily: root.bar ? root.bar.fontFamily : Style.font.family
+    horizontalPadding: Style.space(4)
+    verticalPadding: Style.space(3)
     bordered: true
 
     // Map the panel's domain semantics onto Button's structural props:
