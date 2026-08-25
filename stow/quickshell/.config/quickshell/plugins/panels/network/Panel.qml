@@ -412,11 +412,13 @@ Panel {
   readonly property string kind: {
     if (wiredDevice && wiredDevice.connected) return "ethernet"
     if (connectedWifiNetwork) return "wifi"
+    if (info.type === "wifi") return "wifi"
+    if (info.type === "ethernet") return "ethernet"
     return "disconnected"
   }
   readonly property int signalStrength: connectedWifiNetwork
     ? Math.round((connectedWifiNetwork.signalStrength || 0) * 100)
-    : -1
+    : (info.signal ? parseInt(info.signal, 10) : -1)
 
   function copyToClipboard(value) {
     if (!value || !root.bar) return

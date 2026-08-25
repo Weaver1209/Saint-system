@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# kiku-powerprofiles-set: Sets power-profiles-daemon profile
+
+set -euo pipefail
+
+profile="${2:-$1}"
+if [ -z "$profile" ] || [ "$profile" = "battery" ] || [ "$profile" = "ac" ]; then
+  profile="${1:-balanced}"
+fi
+
+if command -v powerprofilesctl &>/dev/null; then
+  powerprofilesctl set "$profile" 2>/dev/null || true
+fi

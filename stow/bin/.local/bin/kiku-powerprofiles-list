@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# kiku-powerprofiles-list: Lists power profiles and active state (tab-separated)
+
+set -euo pipefail
+
+active=$(powerprofilesctl get 2>/dev/null || echo "balanced")
+profiles="power-saver balanced performance"
+
+for p in $profiles; do
+  if [ "$p" = "$active" ]; then
+    echo -e "${p}\t1"
+  else
+    echo -e "${p}\t0"
+  fi
+done

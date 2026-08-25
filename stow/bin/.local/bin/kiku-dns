@@ -1,0 +1,342 @@
+#!/usr/bin/env bash
+# kiku-dns: High-security DNS manager with dnsproxy & systemd-resolved integration
+# Supports DNS-over-HTTPS (DoH), DNS-over-QUIC (DoQ), DNS-over-TLS (DoT), HTTP/3, and DNSSEC.
+
+set -euo pipefail
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dns-manager"
+CONFIG_FILE="$STATE_DIR/profile"
+PID_FILE="$STATE_DIR/dnsproxy.pid"
+LOG_FILE="$STATE_DIR/dnsproxy.log"
+PORT=5353
+LISTEN_ADDR="127.0.0.1"
+
+mkdir -p "$STATE_DIR"
+
+# Available DNS Profiles
+# Format: Name | Description | Icon | dnsproxy args
+get_profile_info() {
+  local profile="$1"
+  case "$profile" in
+    quad9)
+      echo "Quad9 (Malware Blocking + DNSSEC)"
+      ;;
+    adguard)
+      echo "AdGuard (Ad & Tracker Blocking)"
+      ;;
+    cloudflare)
+      echo "Cloudflare (Fast & Privacy First)"
+      ;;
+    mullvad)
+      echo "Mullvad (Adblock & Privacy)"
+      ;;
+    default|dhcp)
+      echo "Default (DHCP / Router DNS)"
+      ;;
+    *)
+      echo "Unknown"
+      ;;
+  esac
+}
+
+get_active_interfaces() {
+  local ifaces
+  ifaces=$(ip -o link show up 2>/dev/null | awk -F': ' '$2 !~ /^(lo|docker|veth|virbr|br-|tailscale)/ {print $2}')
+  if [ -z "$ifaces" ]; then
+    ifaces="wlan0"
+  fi
+  echo "$ifaces"
+}
+
+get_current_profile() {
+  if [ -f "$CONFIG_FILE" ]; then
+    cat "$CONFIG_FILE"
+  else
+    echo "default"
+  fi
+}
+
+is_dnsproxy_running() {
+  if [ -f "$PID_FILE" ]; then
+    local pid
+    pid=$(cat "$PID_FILE" 2>/dev/null || echo "")
+    if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+      return 0
+    fi
+  fi
+  return 1
+}
+
+stop_dnsproxy() {
+  if [ -f "$PID_FILE" ]; then
+    local pid
+    pid=$(cat "$PID_FILE" 2>/dev/null || echo "")
+    if [ -n "$pid" ]; then
+      kill "$pid" 2>/dev/null || true
+      sleep 0.2
+      kill -9 "$pid" 2>/dev/null || true
+    fi
+    rm -f "$PID_FILE"
+  fi
+  pkill -f "dnsproxy.*-p $PORT" 2>/dev/null || true
+}
+
+start_dnsproxy() {
+  local profile="$1"
+  stop_dnsproxy
+
+  local dnsproxy_bin="${HOME}/.local/bin/dnsproxy"
+  if ! command -v "$dnsproxy_bin" &>/dev/null; then
+    dnsproxy_bin=$(which dnsproxy 2>/dev/null || echo "")
+  fi
+
+  if [ -z "$dnsproxy_bin" ] || [ ! -x "$dnsproxy_bin" ]; then
+    notify "Error" "dnsproxy binary not found in PATH or ~/.local/bin" "dialog-error"
+    return 1
+  fi
+
+  local upstreams=()
+  local bootstraps=("--bootstrap" "9.9.9.9:53" "--bootstrap" "1.1.1.1:53" "--bootstrap" "94.140.14.14:53")
+  local fallbacks=("--fallback" "9.9.9.9:53" "--fallback" "1.1.1.1:53")
+
+  case "$profile" in
+    quad9)
+      upstreams=(
+        "--upstream" "https://dns.quad9.net/dns-query"
+        "--upstream" "tls://dns.quad9.net"
+      )
+      ;;
+    adguard)
+      upstreams=(
+        "--upstream" "https://dns.adguard-dns.com/dns-query"
+        "--upstream" "quic://dns.adguard-dns.com"
+        "--upstream" "tls://dns.adguard-dns.com"
+      )
+      ;;
+    cloudflare)
+      upstreams=(
+        "--upstream" "https://cloudflare-dns.com/dns-query"
+        "--upstream" "tls://1.1.1.1"
+      )
+      ;;
+    mullvad)
+      upstreams=(
+        "--upstream" "https://adblock.doh.mullvad.net/dns-query"
+        "--upstream" "tls://adblock.doh.mullvad.net"
+      )
+      ;;
+    *)
+      return 0
+      ;;
+  esac
+
+  # Start dnsproxy with best security settings:
+  # - DNSSEC validation
+  # - HTTP/3 support
+  # - Optimistic caching & 64k entries
+  # - Refuse ANY requests (anti-amplification)
+  # - Parallel upstream queries for lowest latency
+  "$dnsproxy_bin" \
+    --listen="$LISTEN_ADDR" \
+    --port="$PORT" \
+    "${upstreams[@]}" \
+    "${bootstraps[@]}" \
+    "${fallbacks[@]}" \
+    --http3 \
+    --dnssec \
+    --cache \
+    --cache-optimistic \
+    --cache-size=65536 \
+    --cache-min-ttl=300 \
+    --refuse-any \
+    --upstream-mode=parallel \
+    >> "$LOG_FILE" 2>&1 &
+
+  local pid=$!
+  echo "$pid" > "$PID_FILE"
+  sleep 0.3
+
+  if ! kill -0 "$pid" 2>/dev/null; then
+    notify "DNS Error" "Failed to start dnsproxy. Check $LOG_FILE" "dialog-error"
+    return 1
+  fi
+}
+
+apply_system_dns() {
+  local profile="$1"
+  local ifaces
+  ifaces=$(get_active_interfaces)
+
+  if [ "$profile" = "default" ] || [ "$profile" = "dhcp" ]; then
+    stop_dnsproxy
+    for iface in $ifaces; do
+      if command -v resolvectl &>/dev/null; then
+        resolvectl revert "$iface" 2>/dev/null || true
+        resolvectl default-route "$iface" yes 2>/dev/null || true
+      fi
+      if command -v nmcli &>/dev/null; then
+        nmcli dev reapply "$iface" 2>/dev/null || true
+      fi
+    done
+    if command -v resolvectl &>/dev/null; then
+      resolvectl flush-caches 2>/dev/null || true
+    fi
+  else
+    start_dnsproxy "$profile"
+    for iface in $ifaces; do
+      if command -v resolvectl &>/dev/null; then
+        resolvectl default-route "$iface" yes 2>/dev/null || true
+        resolvectl dns "$iface" "${LISTEN_ADDR}:${PORT}" 2>/dev/null || true
+        resolvectl dnsovertls "$iface" no 2>/dev/null || true
+      fi
+    done
+    if command -v resolvectl &>/dev/null; then
+      resolvectl flush-caches 2>/dev/null || true
+    fi
+  fi
+
+  echo "$profile" > "$CONFIG_FILE"
+}
+
+notify() {
+  local title="$1"
+  local msg="$2"
+  local icon="${3:-network-wireless-symbolic}"
+
+  if command -v notify-send &>/dev/null; then
+    notify-send \
+      -h string:x-canonical-private-synchronous:dns \
+      -u low \
+      -i "$icon" \
+      "$title" \
+      "$msg"
+  fi
+}
+
+set_profile() {
+  local profile="$1"
+  case "$profile" in
+    quad9|adguard|cloudflare|mullvad|default|dhcp)
+      ;;
+    *)
+      echo "Unknown profile: $profile"
+      echo "Valid profiles: quad9, adguard, cloudflare, mullvad, default"
+      exit 1
+      ;;
+  esac
+
+  apply_system_dns "$profile"
+  local desc
+  desc=$(get_profile_info "$profile")
+  if [ "$profile" = "default" ] || [ "$profile" = "dhcp" ]; then
+    notify "DNS Switched" "Mode: $desc" "network-workgroup"
+  else
+    notify "Secure DNS Active" "Provider: $desc\nSecurity: DoH/DoQ + DNSSEC + HTTP/3" "security-high"
+  fi
+  echo "Active DNS profile: $profile ($desc)"
+}
+
+toggle() {
+  local current
+  current=$(get_current_profile)
+  if [ "$current" = "default" ] || [ "$current" = "dhcp" ]; then
+    set_profile "quad9"
+  else
+    set_profile "default"
+  fi
+}
+
+cycle() {
+  local current
+  current=$(get_current_profile)
+  case "$current" in
+    default|dhcp)
+      set_profile "quad9"
+      ;;
+    quad9)
+      set_profile "adguard"
+      ;;
+    adguard)
+      set_profile "cloudflare"
+      ;;
+    cloudflare)
+      set_profile "mullvad"
+      ;;
+    mullvad|*)
+      set_profile "default"
+      ;;
+  esac
+}
+
+show_status() {
+  local current
+  current=$(get_current_profile)
+  local desc
+  desc=$(get_profile_info "$current")
+  local running="no"
+  if is_dnsproxy_running; then
+    running="yes (pid $(cat "$PID_FILE" 2>/dev/null))"
+  fi
+
+  echo "=== DNS Manager Status ==="
+  echo "Current Profile: $current"
+  echo "Description:     $desc"
+  echo "dnsproxy active: $running"
+  echo "Listening on:    $LISTEN_ADDR:$PORT"
+  echo "Active Interfaces: $(get_active_interfaces | tr '\n' ' ')"
+  if command -v resolvectl &>/dev/null; then
+    echo ""
+    echo "--- resolvectl status ---"
+    resolvectl status 2>/dev/null | grep -E "Current DNS Server|DNS Servers|Protocols|Default Route" || true
+  fi
+}
+
+menu() {
+  local options="🔒 Quad9 (Malware Block + DNSSEC)\n🛡️ AdGuard (Ad & Tracker Block)\n⚡ Cloudflare (Fast & Private)\n🛡️ Mullvad (Adblock & Privacy)\n🌐 Default (DHCP / Router DNS)"
+
+  if command -v rofi &>/dev/null; then
+    local chosen
+    chosen=$(echo -e "$options" | rofi -dmenu -p "Select DNS Provider:" -theme-str 'window {width: 420px;}')
+    case "$chosen" in
+      *Quad9*) set_profile "quad9" ;;
+      *AdGuard*) set_profile "adguard" ;;
+      *Cloudflare*) set_profile "cloudflare" ;;
+      *Mullvad*) set_profile "mullvad" ;;
+      *Default*) set_profile "default" ;;
+    esac
+  else
+    cycle
+  fi
+}
+
+case "${1:-status}" in
+  toggle)
+    toggle
+    ;;
+  cycle|next)
+    cycle
+    ;;
+  set)
+    if [ -z "${2:-}" ]; then
+      echo "Usage: $0 set <quad9|adguard|cloudflare|mullvad|default>"
+      exit 1
+    fi
+    set_profile "$2"
+    ;;
+  status)
+    show_status
+    ;;
+  menu)
+    menu
+    ;;
+  stop)
+    apply_system_dns "default"
+    ;;
+  help|--help|-h)
+    echo "Usage: $0 {toggle|cycle|set <profile>|status|menu|stop}"
+    echo "Profiles: quad9, adguard, cloudflare, mullvad, default"
+    ;;
+  *)
+    set_profile "$1"
+    ;;
+esac

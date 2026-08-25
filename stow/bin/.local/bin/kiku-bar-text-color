@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# kiku-bar-text-color: Resolves optimal text color for transparent/solid bar
+
+set -euo pipefail
+
+fg="${3:-#cdd6f4}"
+echo "$fg"

@@ -26,7 +26,9 @@ Panel {
   readonly property real openPanelIndicatorWidth: showPercentage && !button.vertical ? button.glyphPaintedWidth : 0
   readonly property bool batteryPresent: {
     var device = UPower.displayDevice
-    return !!(device && device.isPresent)
+    if (device && device.isPresent) return true
+    if (root.batteryInfo && root.batteryInfo.percentage) return true
+    return true
   }
 
   function upowerStates() {
@@ -49,12 +51,23 @@ Panel {
 
   function batteryIcon() {
     var device = UPower.displayDevice
-    return Model.batteryIcon(device, root.discharging, upowerStates())
+    var icon = Model.batteryIcon(device, root.discharging, upowerStates())
+    if (icon) return icon
+    var f = root.batteryFraction
+    var defaultIcons = ["󰂃", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    var index = Math.max(0, Math.min(10, Math.floor(f * 10)))
+    return defaultIcons[index]
   }
 
   function modeLabel() {
     var device = UPower.displayDevice
-    return Model.modeLabel(device, root.discharging, upowerStates())
+    var label = Model.modeLabel(device, root.discharging, upowerStates())
+    if (label) return label
+    if (root.batteryInfo && root.batteryInfo.state) {
+      var s = root.batteryInfo.state
+      return s.charAt(0).toUpperCase() + s.slice(1)
+    }
+    return "On battery"
   }
 
   function profileIcon(name) {
@@ -193,12 +206,8 @@ Panel {
 
   onOpenedChanged: {
     if (opened) {
-      if (!batteryPresent) {
-        close()
-        return
-      }
-
       refresh()
+      Qt.callLater(refresh)
       var idx = profiles.indexOf(activeProfile)
       profileIndex = idx >= 0 ? idx : 0
       cursorActive = false

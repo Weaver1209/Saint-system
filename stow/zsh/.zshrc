@@ -15,6 +15,7 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="/home/weaver/.local/share/pi-node/node-v22.23.2-linux-x64/bin:$PATH"
 
 # Modern CLI Tools Setup
 

@@ -189,6 +189,7 @@ BarWidget {
 
     visible: !root.vertical
     spacing: 0
+    anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
     HoverHandler {
       onHoveredChanged: root.setIndicatorAreaHovered(hovered)
@@ -198,7 +199,7 @@ BarWidget {
       id: inactiveHorizontalArea
 
       implicitWidth: root.revealInactiveIndicators ? inactiveHorizontalBlock.implicitWidth : 0
-      implicitHeight: Math.max(inactiveHorizontalBlock.implicitHeight, root.barSize)
+      implicitHeight: inactiveHorizontalBlock.implicitHeight
       width: implicitWidth
       height: implicitHeight
       clip: true
@@ -220,6 +221,7 @@ BarWidget {
 
     ActiveIndicatorBlock {
       id: activeHorizontalBlock
+      anchors.verticalCenter: parent.verticalCenter
       indicatorsModule: root
       indicatorModel: activeIndicatorModel
       horizontal: true
@@ -232,6 +234,7 @@ BarWidget {
 
     visible: root.vertical
     spacing: 0
+    anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
 
     HoverHandler {
       onHoveredChanged: root.setIndicatorAreaHovered(hovered)
@@ -240,7 +243,7 @@ BarWidget {
     Item {
       id: inactiveVerticalArea
 
-      implicitWidth: Math.max(inactiveVerticalBlock.implicitWidth, root.barSize)
+      implicitWidth: inactiveVerticalBlock.implicitWidth
       implicitHeight: root.revealInactiveIndicators ? inactiveVerticalBlock.implicitHeight : 0
       width: implicitWidth
       height: implicitHeight
@@ -263,6 +266,7 @@ BarWidget {
 
     ActiveIndicatorBlock {
       id: activeVerticalBlock
+      anchors.horizontalCenter: parent.horizontalCenter
       indicatorsModule: root
       indicatorModel: activeIndicatorModel
       horizontal: false

@@ -310,6 +310,7 @@ Panel {
   onOpenedChanged: {
     if (opened) {
       refreshDisplayAudioModels()
+      Qt.callLater(refreshDisplayAudioModels)
       focusSection = "output"
       selectedIndex = -1  // first keyboard cursor reveal starts on the output slider
       cursorActive = false
@@ -320,6 +321,7 @@ Panel {
   }
 
   // Clamp / repair the cursor whenever any list refreshes underneath us.
+  onNodesChanged: scheduleDisplayAudioModelRefresh()
   onAudioSinksChanged: scheduleDisplayAudioModelRefresh()
   onAudioSourcesChanged: scheduleDisplayAudioModelRefresh()
   onAudioStreamsChanged: scheduleDisplayAudioModelRefresh()
@@ -1013,6 +1015,23 @@ Panel {
     required property int rowIndex
 
     readonly property bool isActive: root.sink && node && root.sink.id === node.id
+    readonly property string label: {
+      if (!node) return "Unknown"
+      var _ready = node.ready
+      var _desc = node.description
+      var _nick = node.nickname || node.nick
+      var _name = node.name
+      var _props = node.properties
+      return root.nodeLabel(node)
+    }
+    readonly property string glyph: {
+      if (!node) return ""
+      var _ready = node.ready
+      var _props = node.properties
+      var _name = node.name
+      var _desc = node.description
+      return root.sinkGlyph(node)
+    }
     hasCursor: root.cursorActive && root.focusSection === "output" && root.selectedIndex === rowIndex
     onHasCursorChanged: if (hasCursor) root.ensureCursorVisible(sinkRow)
     current: isActive
@@ -1031,7 +1050,7 @@ Panel {
       spacing: Style.space(8)
 
       Text {
-        text: root.sinkGlyph(sinkRow.node)
+        text: sinkRow.glyph
         color: root.bar.foreground
         font.family: root.bar.fontFamily
         font.pixelSize: Style.font.title
@@ -1041,7 +1060,7 @@ Panel {
       }
 
       Text {
-        text: root.nodeLabel(sinkRow.node)
+        text: sinkRow.label
         color: root.bar.foreground
         font.family: root.bar.fontFamily
         font.pixelSize: Style.font.body
@@ -1072,6 +1091,23 @@ Panel {
     required property int rowIndex
 
     readonly property bool isActive: root.source && node && root.source.id === node.id
+    readonly property string label: {
+      if (!node) return "Unknown"
+      var _ready = node.ready
+      var _desc = node.description
+      var _nick = node.nickname || node.nick
+      var _name = node.name
+      var _props = node.properties
+      return root.nodeLabel(node)
+    }
+    readonly property string glyph: {
+      if (!node) return ""
+      var _ready = node.ready
+      var _props = node.properties
+      var _name = node.name
+      var _desc = node.description
+      return root.sourceGlyph(node)
+    }
     hasCursor: root.cursorActive && root.focusSection === "input" && root.selectedIndex === rowIndex
     onHasCursorChanged: if (hasCursor) root.ensureCursorVisible(sourceRow)
     current: isActive
@@ -1090,7 +1126,7 @@ Panel {
       spacing: Style.space(8)
 
       Text {
-        text: root.sourceGlyph(sourceRow.node)
+        text: sourceRow.glyph
         color: root.bar.foreground
         font.family: root.bar.fontFamily
         font.pixelSize: Style.font.title
@@ -1100,7 +1136,7 @@ Panel {
       }
 
       Text {
-        text: root.nodeLabel(sourceRow.node)
+        text: sourceRow.label
         color: root.bar.foreground
         font.family: root.bar.fontFamily
         font.pixelSize: Style.font.body
@@ -1136,6 +1172,14 @@ Panel {
     readonly property real streamVolume: node && node.audio ? node.audio.volume : 0
     readonly property bool streamMuted: node && node.audio ? node.audio.muted : false
     readonly property bool isActive: root.streamRepresentsPlayer(node, root.activeMediaPlayer)
+    readonly property string label: {
+      if (!node) return "Stream"
+      var _ready = node.ready
+      var _desc = node.description
+      var _name = node.name
+      var _props = node.properties
+      return root.streamLabel(node)
+    }
 
     hasCursor: root.cursorActive && root.focusSection === "streams" && root.selectedIndex === rowIndex
     onHasCursorChanged: if (hasCursor) root.ensureCursorVisible(streamRow)
@@ -1180,7 +1224,7 @@ Panel {
         }
 
         Text {
-          text: root.streamLabel(streamRow.node)
+          text: streamRow.label
           color: root.bar.foreground
           font.family: root.bar.fontFamily
           font.pixelSize: Style.font.body

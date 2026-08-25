@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# kiku-audio-output-sink: Outputs default audio sink node name
+
+set -euo pipefail
+
+if command -v pactl &>/dev/null; then
+  pactl get-default-sink 2>/dev/null && exit 0
+fi
+
+if command -v wpctl &>/dev/null; then
+  wpctl inspect @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk -F'"' '/node\.name/ {print $2; exit}' && exit 0
+fi

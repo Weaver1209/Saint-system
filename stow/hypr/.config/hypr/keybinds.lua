@@ -87,6 +87,12 @@ hl.bind(
 )
 
 hl.bind(
+    "SUPER + SHIFT + D",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/dns-toggle.sh menu"),
+    { description = "Open DNS Profile Menu" }
+)
+
+hl.bind(
     "SUPER + SHIFT + W",
     hl.dsp.exec_cmd("$HOME/.local/bin/kiku-launch-webapp https://web.whatsapp.com"),
     { description = "Open WhatsApp Web" }

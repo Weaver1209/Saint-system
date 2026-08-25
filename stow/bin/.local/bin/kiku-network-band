@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# kiku-network-band: Inspects and manages Wi-Fi frequency band (2.4GHz / 5GHz / 6GHz)
+
+set -euo pipefail
+
+iface=$(ip route show default 2>/dev/null | awk '/default/ {print $5; exit}')
+if [ -z "$iface" ] || [ ! -d "/sys/class/net/$iface/wireless" ]; then
+  iface="wlan0"
+fi
+
+current_freq=$(iw dev "$iface" link 2>/dev/null | awk '/freq:/ {gsub(/\..*/, "", $2); print $2; exit}' || echo "")
+current_ssid=$(iw dev "$iface" link 2>/dev/null | awk -F': ' '/SSID/ {print $2; exit}' || echo "")
+
+band=""
+if [ -n "$current_freq" ] && [ "$current_freq" -gt 0 ] 2>/dev/null; then
+  if [ "$current_freq" -ge 2400 ] && [ "$current_freq" -le 2500 ]; then
+    band="2.4"
+  elif [ "$current_freq" -ge 4900 ] && [ "$current_freq" -le 5925 ]; then
+    band="5"
+  elif [ "$current_freq" -ge 5925 ] && [ "$current_freq" -le 7125 ]; then
+    band="6"
+  fi
+fi
+
+# Determine available bands for current SSID
+available_bands=()
+if [ -n "$current_ssid" ] && command -v nmcli &>/dev/null; then
+  freqs=$(nmcli -t -f ssid,freq dev wifi 2>/dev/null | awk -F':' -v ssid="$current_ssid" '$1 == ssid {print $2}' | tr -d ' MHz' | awk '{gsub(/\..*/, ""); print}')
+  has_24=0
+  has_5=0
+  has_6=0
+  for f in $freqs; do
+    if [ "$f" -ge 2400 ] 2>/dev/null && [ "$f" -le 2500 ] 2>/dev/null; then has_24=1; fi
+    if [ "$f" -ge 4900 ] 2>/dev/null && [ "$f" -le 5925 ] 2>/dev/null; then has_5=1; fi
+    if [ "$f" -ge 5925 ] 2>/dev/null && [ "$f" -le 7125 ] 2>/dev/null; then has_6=1; fi
+  done
+  [ "$has_24" -eq 1 ] && available_bands+=("2.4")
+  [ "$has_5" -eq 1 ] && available_bands+=("5")
+  [ "$has_6" -eq 1 ] && available_bands+=("6")
+fi
+
+if [ "${#available_bands[@]}" -eq 0 ] && [ -n "$band" ]; then
+  available_bands=("$band")
+fi
+
+# If target band argument provided: set band
+target="${1:-}"
+if [ -n "$target" ]; then
+  if [ "$target" = "auto" ]; then
+    # Clear band preference
+    if [ -n "$current_ssid" ]; then
+      nmcli connection modify "$current_ssid" 802-11-wireless.band "" 802-11-wireless.bssid "" 2>/dev/null || true
+      nmcli connection up "$current_ssid" 2>/dev/null || true
+    fi
+  else
+    # Find matching BSSID for target band
+    target_bssid=$(nmcli -t -f ssid,freq,bssid dev wifi 2>/dev/null | awk -F':' -v ssid="$current_ssid" -v t="$target" '
+      $1 == ssid {
+        f = $2; gsub(/[^0-9]/, "", f);
+        if (t == "2.4" && f >= 2400 && f <= 2500) { print $3 ":" $4 ":" $5 ":" $6 ":" $7 ":" $8; exit }
+        if (t == "5" && f >= 4900 && f <= 5925) { print $3 ":" $4 ":" $5 ":" $6 ":" $7 ":" $8; exit }
+        if (t == "6" && f >= 5925 && f <= 7125) { print $3 ":" $4 ":" $5 ":" $6 ":" $7 ":" $8; exit }
+      }' || true)
+    if [ -n "$target_bssid" ] && [ -n "$current_ssid" ]; then
+      nmcli connection modify "$current_ssid" 802-11-wireless.bssid "$target_bssid" 2>/dev/null || true
+      nmcli connection up "$current_ssid" 2>/dev/null || true
+    fi
+  fi
+  exit 0
+fi
+
+# Print status key-values
+echo -e "band\t$band"
+echo -e "selected\tauto"
+echo -e "available\t${available_bands[*]}"

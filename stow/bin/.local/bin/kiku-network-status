@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+# kiku-network-status: Reports network connection status in key\tvalue format
+
+set -euo pipefail
+
+# Find default route interface
+iface=$(ip route show default 2>/dev/null | awk '/default/ {print $5; exit}')
+
+if [ -z "$iface" ]; then
+  # Fallback to first UP interface
+  iface=$(ip -o link show up 2>/dev/null | awk -F': ' '$2 !~ /^(lo|docker|veth|virbr|br-|tailscale)/ {print $2; exit}')
+fi
+
+if [ -z "$iface" ]; then
+  echo -e "type\tdisconnected"
+  exit 0
+fi
+
+# Detect type
+type="ethernet"
+if [ -d "/sys/class/net/$iface/wireless" ] || [ -e "/sys/class/net/$iface/phy80211" ] || iw dev "$iface" info &>/dev/null; then
+  type="wifi"
+fi
+
+# IP & Gateway
+ip_cidr=$(ip -4 -o addr show dev "$iface" 2>/dev/null | awk '{print $4; exit}')
+ip_addr="${ip_cidr%/*}"
+prefix="${ip_cidr#*/}"
+gateway=$(ip route show default dev "$iface" 2>/dev/null | awk '/default/ {print $3; exit}')
+
+# Bytes transferred
+rx_bytes=0
+tx_bytes=0
+if [ -f "/sys/class/net/$iface/statistics/rx_bytes" ]; then
+  rx_bytes=$(cat "/sys/class/net/$iface/statistics/rx_bytes" 2>/dev/null || echo 0)
+fi
+if [ -f "/sys/class/net/$iface/statistics/tx_bytes" ]; then
+  tx_bytes=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo 0)
+fi
+
+echo -e "iface\t$iface"
+echo -e "type\t$type"
+[ -n "$ip_addr" ] && echo -e "ip\t$ip_addr"
+[ -n "$prefix" ] && echo -e "prefix\t$prefix"
+[ -n "$gateway" ] && echo -e "gateway\t$gateway"
+echo -e "rx_bytes\t$rx_bytes"
+echo -e "tx_bytes\t$tx_bytes"
+
+if [ "$type" = "wifi" ]; then
+  # WiFi specific info
+  ssid=""
+  freq=""
+  signal=""
+  bitrate=""
+
+  if command -v iw &>/dev/null; then
+    iw_link=$(iw dev "$iface" link 2>/dev/null || true)
+    ssid=$(echo "$iw_link" | awk -F': ' '/SSID/ {print $2; exit}')
+    freq=$(echo "$iw_link" | awk '/freq:/ {print $2; exit}')
+    # Signal in dBm -> approx percentage (e.g. -50 dBm -> 100%, -100 dBm -> 0%)
+    sig_dbm=$(echo "$iw_link" | awk '/signal:/ {print $2; exit}')
+    if [ -n "$sig_dbm" ]; then
+      # dBm to 0-100% conversion
+      sig_val=$(echo "$sig_dbm" | tr -d '-')
+      if [ "$sig_val" -le 50 ]; then
+        signal=100
+      elif [ "$sig_val" -ge 100 ]; then
+        signal=0
+      else
+        signal=$(( 2 * (100 - sig_val) ))
+      fi
+    fi
+    bitrate=$(echo "$iw_link" | awk -F': ' '/tx bitrate/ {print $2; exit}')
+  fi
+
+  if [ -z "$ssid" ] && command -v nmcli &>/dev/null; then
+    nm_active=$(nmcli -t -f active,ssid,signal,freq,rate dev wifi 2>/dev/null | grep '^yes:' | head -n 1 || true)
+    if [ -n "$nm_active" ]; then
+      ssid=$(echo "$nm_active" | cut -d':' -f2)
+      signal=$(echo "$nm_active" | cut -d':' -f3)
+      freq_mhz=$(echo "$nm_active" | cut -d':' -f4 | tr -d ' MHz')
+      freq="$freq_mhz"
+      bitrate=$(echo "$nm_active" | cut -d':' -f5)
+    fi
+  fi
+
+  [ -n "$ssid" ] && echo -e "ssid\t$ssid"
+  [ -n "$freq" ] && echo -e "freq\t$freq"
+  [ -n "$signal" ] && echo -e "signal\t$signal"
+  [ -n "$bitrate" ] && echo -e "bitrate\t$bitrate"
+else
+  # Ethernet speed & duplex
+  if [ -f "/sys/class/net/$iface/speed" ]; then
+    speed=$(cat "/sys/class/net/$iface/speed" 2>/dev/null || true)
+    [ -n "$speed" ] && [ "$speed" -gt 0 ] 2>/dev/null && echo -e "speed\t$speed"
+  fi
+  if [ -f "/sys/class/net/$iface/duplex" ]; then
+    duplex=$(cat "/sys/class/net/$iface/duplex" 2>/dev/null || true)
+    [ -n "$duplex" ] && echo -e "duplex\t$duplex"
+  fi
+fi
+
+# Ping metrics (fast 1-packet background checks)
+if [ "${1:-}" = "--verbose" ] || [ "${1:-}" = "-v" ]; then
+  if [ -n "$gateway" ]; then
+    router_ping=$(ping -c 1 -W 1 -q "$gateway" 2>/dev/null | awk -F'/' '/rtt|round-trip/ {print $5}' || true)
+    [ -n "$router_ping" ] && echo -e "router_ping_ms\t$router_ping"
+  fi
+
+  internet_ping=$(ping -c 1 -W 1 -q 1.1.1.1 2>/dev/null | awk -F'/' '/rtt|round-trip/ {print $5}' || true)
+  if [ -z "$internet_ping" ]; then
+    internet_ping=$(ping -c 1 -W 1 -q 9.9.9.9 2>/dev/null | awk -F'/' '/rtt|round-trip/ {print $5}' || true)
+  fi
+  [ -n "$internet_ping" ] && echo -e "internet_ping_ms\t$internet_ping"
+fi

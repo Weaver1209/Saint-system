@@ -1,6 +1,9 @@
 function deviceLabel(device) {
   if (!device) return ""
-  return String(device.deviceName || device.name || "").trim()
+  var name = String(device.deviceName || device.name || device.alias || "").trim()
+  if (name) return name
+  if (device.address) return device.address
+  return "Bluetooth Device"
 }
 
 function toArray(values) {
@@ -34,8 +37,8 @@ function normalizedAddress(value) {
 }
 
 function hasHumanName(device) {
-  var label = deviceLabel(device)
-  return label !== "" && !isUuidLike(label) && !isAddressLike(label)
+  var label = String(device && (device.deviceName || device.name || device.alias) || "").trim()
+  return label !== "" && !isUuidLike(label)
 }
 
 function nodeProps(node) {
@@ -91,6 +94,7 @@ function deviceRow(d) {
     address: d.address || "",
     name: d.name || "",
     deviceName: d.deviceName || "",
+    alias: d.alias || "",
     connected: !!d.connected,
     state: d.state !== undefined ? d.state : -1,
     batteryAvailable: !!d.batteryAvailable,
@@ -107,10 +111,14 @@ function deviceLists(devices) {
 
   for (var i = 0; i < values.length; i++) {
     var d = values[i]
-    if (!d || !hasHumanName(d)) continue
-    if (d.connected) connected.push(d)
-    else if (d.paired || d.bonded || d.trusted) known.push(d)
-    else discovered.push(d)
+    if (!d) continue
+    if (d.connected) {
+      connected.push(d)
+    } else if (d.paired || d.bonded || d.trusted) {
+      known.push(d)
+    } else if (hasHumanName(d)) {
+      discovered.push(d)
+    }
   }
 
   return {

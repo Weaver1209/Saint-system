@@ -485,8 +485,11 @@ Panel {
     interval: 1000
     repeat: true
     triggeredOnStart: true
-    running: root.opened && root.adapter !== null && root.adapter.enabled && !root.adapter.discovering
-    onTriggered: root.adapter.discovering = true
+    running: root.opened && root.adapter !== null && root.adapter.enabled
+    onTriggered: {
+      if (!root.adapter.discovering) root.adapter.discovering = true
+      root.syncPendingActions()
+    }
   }
 
   Timer {
