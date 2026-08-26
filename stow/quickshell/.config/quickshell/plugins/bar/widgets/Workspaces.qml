@@ -64,7 +64,7 @@ BarWidget {
         foreground: focused ? Color.bar.background : (occupied ? Color.bar.text : Color.bar.muted)
         activeColor: Color.bar.active
         useActiveColor: true
-        opacity: occupied || focused ? 1.0 : 0.55
+        opacity: occupied || focused ? 1.0 : 0.75
         horizontalMargin: 6
         verticalPadding: 4
         fixedWidth: root.vertical ? root.barSize : Style.space(22)

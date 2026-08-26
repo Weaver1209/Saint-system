@@ -1,391 +1,368 @@
 {
-    "book_list_pin_splitter_state": {
-        "__class__": "bytearray",
-        "__value__": "AAAA/wAAAAEAAAACAAABAP////8A/////wEAAAABAA=="
-    },
-    "bookshelf view visible": false,
-    "color_palette": "dark",
-    "cover_grid_background": {
-        "dark": [
-            45,
-            45,
-            45
-        ],
-        "dark_texture": null,
-        "light": [
-            80,
-            80,
-            80
-        ],
-        "light_texture": null,
-        "migrated": true
-    },
-    "custom_colors_for_color_dialog": [
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ],
-        [
-            255,
-            255,
-            255,
-            255
-        ]
+  "book_list_pin_splitter_state": {
+    "__class__": "bytearray",
+    "__value__": "AAAA/wAAAAEAAAACAAABAAAAAEYA/////wEAAAABAA=="
+  },
+  "bookshelf view visible": false,
+  "color_palette": "dark",
+  "cover_corner_radius": 3,
+  "cover_grid_background": {
+    "dark": [
+      45,
+      45,
+      45
     ],
-    "dark_palette_name": "Catppuccin Mocha Mauve",
-    "dark_palettes": {
-        "__current__": {
-            "Accent": "#7abc43",
-            "AlternateBase": "#2d2d2d",
-            "Base": "#121212",
-            "BrightText": "#ff0000",
-            "BrightText-disabled": "#ff0000",
-            "Button": "#2d2d2d",
-            "ButtonText": "#dddddd",
-            "ButtonText-disabled": "#7f7f7f",
-            "Highlight": "#0b45c4",
-            "HighlightedText": "#dddddd",
-            "HighlightedText-disabled": "#7f7f7f",
-            "Link": "#6cb4ee",
-            "LinkVisited": "#800080",
-            "PlaceholderText": "#7f7f7f",
-            "PlaceholderText-disabled": "#7f7f7f",
-            "Text": "#dddddd",
-            "Text-disabled": "#7f7f7f",
-            "ToolTipBase": "#2d2d2d",
-            "ToolTipText": "#dddddd",
-            "ToolTipText-disabled": "#dddddd",
-            "Window": "#2d2d2d",
-            "WindowText": "#dddddd",
-            "WindowText-disabled": "#dddddd"
-        },
-        "Catppuccin Mocha Mauve": {
-            "AlternateBase": "#1e1e2e",
-            "Base": "#181825",
-            "BrightText": "#cdd6f4",
-            "BrightText-disabled": "#cdd6f4",
-            "Button": "#1e1e2e",
-            "ButtonText": "#cdd6f4",
-            "ButtonText-disabled": "#585b70",
-            "Highlight": "#cba6f7",
-            "HighlightedText": "#1e1e2e",
-            "HighlightedText-disabled": "#181825",
-            "Link": "#f5e0dc",
-            "LinkVisited": "#89b4fa",
-            "PlaceholderText": "#cdd6f4",
-            "PlaceholderText-disabled": "#cdd6f4",
-            "Text": "#cdd6f4",
-            "Text-disabled": "#585b70",
-            "ToolTipBase": "#11111b",
-            "ToolTipText": "#cdd6f4",
-            "ToolTipText-disabled": "#cdd6f4",
-            "Window": "#11111b",
-            "WindowText": "#cdd6f4",
-            "WindowText-disabled": "#585b70"
-        }
+    "dark_texture": null,
+    "light": [
+      80,
+      80,
+      80
+    ],
+    "light_texture": null,
+    "migrated": true
+  },
+  "custom_colors_for_color_dialog": [
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ],
+    [
+      255,
+      255,
+      255,
+      255
+    ]
+  ],
+  "dark_palette_name": "",
+  "dark_palettes": {
+    "__current__": {
+      "Accent": "#7abc43",
+      "AlternateBase": "#1e1e2e",
+      "Base": "#181825",
+      "BrightText": "#cdd6f4",
+      "BrightText-disabled": "#cdd6f4",
+      "Button": "#1e1e2e",
+      "ButtonText": "#cdd6f4",
+      "ButtonText-disabled": "#585b70",
+      "Highlight": "#cba6f7",
+      "HighlightedText": "#1e1e2e",
+      "HighlightedText-disabled": "#181825",
+      "Link": "#f5e0dc",
+      "LinkVisited": "#89b4fa",
+      "PlaceholderText": "#cdd6f4",
+      "PlaceholderText-disabled": "#cdd6f4",
+      "Text": "#cdd6f4",
+      "Text-disabled": "#585b70",
+      "ToolTipBase": "#11111b",
+      "ToolTipText": "#cdd6f4",
+      "ToolTipText-disabled": "#cdd6f4",
+      "Window": "#11111b",
+      "WindowText": "#cdd6f4",
+      "WindowText-disabled": "#585b70"
+    }
+  },
+  "geometry-of-calibre_main_window_geometry": {
+    "frame_geometry": {
+      "height": 826,
+      "width": 1528,
+      "x": 0,
+      "y": 0
     },
-    "geometry-of-calibre_main_window_geometry": {
-        "frame_geometry": {
-            "height": 826,
-            "width": 759,
-            "x": 0,
-            "y": 0
-        },
-        "full_screened": false,
-        "geometry": {
-            "height": 826,
-            "width": 759,
-            "x": 0,
-            "y": 0
-        },
-        "maximized": true,
-        "normal_geometry": {
-            "height": 826,
-            "width": 1528,
-            "x": 0,
-            "y": 0
-        },
-        "qt": {
-            "__class__": "bytearray",
-            "__value__": "AdnQywADAAAAAAAAAAAAAAAAAvYAAAM5AAAAAAAAAAAAAAX3AAADOQAAAAACAAAABgAAAAAAAAAAAAAAAvYAAAM5"
-        },
-        "screen": {
-            "depth": 32,
-            "device_pixel_ratio": 2.0,
-            "geometry_in_logical_pixels": {
-                "height": 864,
-                "width": 1536,
-                "x": 0,
-                "y": 0
-            },
-            "index_in_screens_list": 0,
-            "manufacturer": "Chimei Innolux Corporation",
-            "model": "0x1560",
-            "name": "eDP-1",
-            "serial": "",
-            "size_in_logical_pixels": {
-                "height": 864,
-                "width": 1536
-            },
-            "virtual_geometry": {
-                "height": 864,
-                "width": 1536,
-                "x": 0,
-                "y": 0
-            }
-        }
+    "full_screened": false,
+    "geometry": {
+      "height": 826,
+      "width": 1528,
+      "x": 0,
+      "y": 0
     },
-    "geometry-of-customize-palette-geometry": {
-        "frame_geometry": {
-            "height": 640,
-            "width": 826,
-            "x": 42,
-            "y": 0
-        },
-        "full_screened": false,
-        "geometry": {
-            "height": 640,
-            "width": 826,
-            "x": 42,
-            "y": 0
-        },
-        "maximized": true,
-        "normal_geometry": {
-            "height": 640,
-            "width": 826,
-            "x": 42,
-            "y": 0
-        },
-        "qt": {
-            "__class__": "bytearray",
-            "__value__": "AdnQywADAAAAAAAqAAAAAAAAA2MAAAJ/AAAAKgAAAAAAAANjAAACfwAAAAACAAAABgAAAAAqAAAAAAAAA2MAAAJ/"
-        },
-        "screen": {
-            "depth": 32,
-            "device_pixel_ratio": 2.0,
-            "geometry_in_logical_pixels": {
-                "height": 864,
-                "width": 1536,
-                "x": 0,
-                "y": 0
-            },
-            "index_in_screens_list": 0,
-            "manufacturer": "Chimei Innolux Corporation",
-            "model": "0x1560",
-            "name": "eDP-1",
-            "serial": "",
-            "size_in_logical_pixels": {
-                "height": 864,
-                "width": 1536
-            },
-            "virtual_geometry": {
-                "height": 864,
-                "width": 1536,
-                "x": 0,
-                "y": 0
-            }
-        }
+    "maximized": true,
+    "normal_geometry": {
+      "height": 826,
+      "width": 1528,
+      "x": 0,
+      "y": 0
     },
-    "geometry-of-preferences dialog geometry": {
-        "frame_geometry": {
-            "height": 720,
-            "width": 930,
-            "x": 289,
-            "y": 13
-        },
-        "full_screened": false,
-        "geometry": {
-            "height": 720,
-            "width": 930,
-            "x": 289,
-            "y": 13
-        },
-        "maximized": true,
-        "normal_geometry": {
-            "height": 720,
-            "width": 930,
-            "x": 289,
-            "y": 13
-        },
-        "qt": {
-            "__class__": "bytearray",
-            "__value__": "AdnQywADAAAAAAEhAAAADQAABMIAAALcAAABIQAAAA0AAATCAAAC3AAAAAACAAAABgAAAAEhAAAADQAABMIAAALc"
-        },
-        "screen": {
-            "depth": 32,
-            "device_pixel_ratio": 2.0,
-            "geometry_in_logical_pixels": {
-                "height": 864,
-                "width": 1536,
-                "x": 0,
-                "y": 0
-            },
-            "index_in_screens_list": 0,
-            "manufacturer": "Chimei Innolux Corporation",
-            "model": "0x1560",
-            "name": "eDP-1",
-            "serial": "",
-            "size_in_logical_pixels": {
-                "height": 864,
-                "width": 1536
-            },
-            "virtual_geometry": {
-                "height": 864,
-                "width": 1536,
-                "x": 0,
-                "y": 0
-            }
-        }
+    "qt": {
+      "__class__": "bytearray",
+      "__value__": "AdnQywADAAAAAAAAAAAAAAAABfcAAAM5AAAAAAAAAAAAAAX3AAADOQAAAAACAAAABgAAAAAAAAAAAAAABfcAAAM5"
     },
-    "grid view visible": true,
-    "library_usage_stats": {
-        "/home/weaver/Documents/Books": 4
+    "screen": {
+      "depth": 32,
+      "device_pixel_ratio": 2.0,
+      "geometry_in_logical_pixels": {
+        "height": 864,
+        "width": 1536,
+        "x": 0,
+        "y": 0
+      },
+      "index_in_screens_list": 0,
+      "manufacturer": "Chimei Innolux Corporation",
+      "model": "0x1560",
+      "name": "eDP-1",
+      "serial": "",
+      "size_in_logical_pixels": {
+        "height": 864,
+        "width": 1536
+      },
+      "virtual_geometry": {
+        "height": 864,
+        "width": 1536,
+        "x": 0,
+        "y": 0
+      }
+    }
+  },
+  "geometry-of-customize-palette-geometry": {
+    "frame_geometry": {
+      "height": 640,
+      "width": 826,
+      "x": 0,
+      "y": 0
     },
-    "light_palette_name": "",
-    "light_palettes": {
-        "__current__": {
-            "Accent": "#31bd5a",
-            "AlternateBase": "#f5f5f5",
-            "Base": "#ffffff",
-            "BrightText": "#ff0000",
-            "BrightText-disabled": "#ff0000",
-            "Button": "#f0f0f0",
-            "ButtonText": "#000000",
-            "ButtonText-disabled": "#787878",
-            "Highlight": "#308cc6",
-            "HighlightedText": "#ffffff",
-            "HighlightedText-disabled": "#787878",
-            "Link": "#0000ff",
-            "LinkVisited": "#ff00ff",
-            "PlaceholderText": "#787878",
-            "PlaceholderText-disabled": "#787878",
-            "Text": "#000000",
-            "Text-disabled": "#787878",
-            "ToolTipBase": "#ffffdc",
-            "ToolTipText": "#000000",
-            "ToolTipText-disabled": "#000000",
-            "Window": "#f0f0f0",
-            "WindowText": "#000000",
-            "WindowText-disabled": "#000000"
-        }
+    "full_screened": false,
+    "geometry": {
+      "height": 640,
+      "width": 826,
+      "x": 0,
+      "y": 0
     },
-    "main_window_central_widget_state": {
-        "layout": "wide",
-        "narrow_desires": {
-            "book_details_height": 0.23059866962305986,
-            "cover_browser_width": 0.3494704992435703,
-            "quick_view_height": 0.25609756097560976,
-            "tag_browser_width": 0.24962178517397882
-        },
-        "narrow_visibility": {
-            "book_details": true,
-            "book_list": true,
-            "cover_browser": false,
-            "quick_view": false,
-            "tag_browser": true
-        },
-        "wide_desires": {
-            "book_details_width": 0.29954614220877457,
-            "cover_browser_height": 0.28600823045267487,
-            "quick_view_height": 0.23765432098765432,
-            "tag_browser_width": 0.29954614220877457
-        },
-        "wide_visibility": {
-            "book_details": false,
-            "book_list": true,
-            "cover_browser": false,
-            "quick_view": false,
-            "tag_browser": false
-        }
+    "maximized": true,
+    "normal_geometry": {
+      "height": 640,
+      "width": 826,
+      "x": 0,
+      "y": 0
     },
-    "quick_start_guide_added": true,
-    "qv_open_at_shutdown": false,
-    "search bar visible": false,
-    "tag browser search box visible": false
+    "qt": {
+      "__class__": "bytearray",
+      "__value__": "AdnQywADAAAAAAAAAAAAAAAAAzkAAAJ/AAAAAAAAAAAAAAM5AAACfwAAAAACAAAABgAAAAAAAAAAAAAAAzkAAAJ/"
+    },
+    "screen": {
+      "depth": 32,
+      "device_pixel_ratio": 2.0,
+      "geometry_in_logical_pixels": {
+        "height": 864,
+        "width": 1536,
+        "x": 0,
+        "y": 0
+      },
+      "index_in_screens_list": 0,
+      "manufacturer": "Chimei Innolux Corporation",
+      "model": "0x1560",
+      "name": "eDP-1",
+      "serial": "",
+      "size_in_logical_pixels": {
+        "height": 864,
+        "width": 1536
+      },
+      "virtual_geometry": {
+        "height": 864,
+        "width": 1536,
+        "x": 0,
+        "y": 0
+      }
+    }
+  },
+  "geometry-of-preferences dialog geometry": {
+    "frame_geometry": {
+      "height": 720,
+      "width": 930,
+      "x": 0,
+      "y": 0
+    },
+    "full_screened": false,
+    "geometry": {
+      "height": 720,
+      "width": 930,
+      "x": 0,
+      "y": 0
+    },
+    "maximized": true,
+    "normal_geometry": {
+      "height": 720,
+      "width": 930,
+      "x": 0,
+      "y": 0
+    },
+    "qt": {
+      "__class__": "bytearray",
+      "__value__": "AdnQywADAAAAAAAAAAAAAAAAA6EAAALPAAAAAAAAAAAAAAOhAAACzwAAAAACAAAABgAAAAAAAAAAAAAAA6EAAALP"
+    },
+    "screen": {
+      "depth": 32,
+      "device_pixel_ratio": 2.0,
+      "geometry_in_logical_pixels": {
+        "height": 864,
+        "width": 1536,
+        "x": 0,
+        "y": 0
+      },
+      "index_in_screens_list": 0,
+      "manufacturer": "Chimei Innolux Corporation",
+      "model": "0x1560",
+      "name": "eDP-1",
+      "serial": "",
+      "size_in_logical_pixels": {
+        "height": 864,
+        "width": 1536
+      },
+      "virtual_geometry": {
+        "height": 864,
+        "width": 1536,
+        "x": 0,
+        "y": 0
+      }
+    }
+  },
+  "grid view visible": true,
+  "library_usage_stats": {
+    "/home/weaver/Documents/Books": 12
+  },
+  "light_palette_name": "__current__",
+  "light_palettes": {
+    "__current__": {
+      "Accent": "#308cc6",
+      "AlternateBase": "#f7f7f7",
+      "Base": "#ffffff",
+      "BrightText": "#ffffff",
+      "BrightText-disabled": "#ffffff",
+      "Button": "#efefef",
+      "ButtonText": "#000000",
+      "ButtonText-disabled": "#bebebe",
+      "Highlight": "#308cc6",
+      "HighlightedText": "#ffffff",
+      "HighlightedText-disabled": "#ffffff",
+      "Link": "#0000ff",
+      "LinkVisited": "#ff00ff",
+      "PlaceholderText": "#000000",
+      "PlaceholderText-disabled": "#000000",
+      "Text": "#000000",
+      "Text-disabled": "#bebebe",
+      "ToolTipBase": "#ffffdc",
+      "ToolTipText": "#000000",
+      "ToolTipText-disabled": "#000000",
+      "Window": "#efefef",
+      "WindowText": "#000000",
+      "WindowText-disabled": "#bebebe"
+    }
+  },
+  "main_window_central_widget_state": {
+    "layout": "wide",
+    "narrow_desires": {
+      "book_details_height": 0.23059866962305986,
+      "cover_browser_width": 0.3494704992435703,
+      "quick_view_height": 0.25609756097560976,
+      "tag_browser_width": 0.24962178517397882
+    },
+    "narrow_visibility": {
+      "book_details": true,
+      "book_list": true,
+      "cover_browser": false,
+      "quick_view": false,
+      "tag_browser": true
+    },
+    "wide_desires": {
+      "book_details_width": 0.29954614220877457,
+      "cover_browser_height": 0.28600823045267487,
+      "quick_view_height": 0.23765432098765432,
+      "tag_browser_width": 0.29954614220877457
+    },
+    "wide_visibility": {
+      "book_details": false,
+      "book_list": true,
+      "cover_browser": false,
+      "quick_view": false,
+      "tag_browser": false
+    }
+  },
+  "quick_start_guide_added": true,
+  "qv_open_at_shutdown": false,
+  "search bar visible": false,
+  "tag browser search box visible": false
 }

@@ -74,7 +74,7 @@
         ],
         "key": "/home/weaver/Documents/Books/Gu Zhen Ren/Reverend Insanity (18)/Reverend Insanity - Gu Zhen Ren.epub",
         "pathtoebook": "/home/weaver/Documents/Books/Gu Zhen Ren/Reverend Insanity (18)/Reverend Insanity - Gu Zhen Ren.epub",
-        "timestamp": "2026-08-26T05:18:46.087Z",
+        "timestamp": "2026-08-26T10:42:33.636Z",
         "title": "Reverend Insanity"
       }
     ],
@@ -82,8 +82,8 @@
       "*Catppuccin": {
         "background": "#1e1e2e",
         "foreground": "#cdd6f4",
-        "name": "Catppuccin",
-        "link": "#89b4fa"
+        "link": "#89b4fa",
+        "name": "Catppuccin"
       }
     }
   }

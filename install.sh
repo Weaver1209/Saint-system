@@ -83,7 +83,7 @@ for pkg_path in "$STOW_DIR"/*; do
     if [ -d "$pkg_path" ]; then
         pkg="$(basename "$pkg_path")"
         echo "  -> Stowing $pkg..."
-        stow -d "$STOW_DIR" -t "$HOME" -R "$pkg"
+        stow -d "$STOW_DIR" -t "$HOME" --adopt -R "$pkg"
     fi
 done
 
