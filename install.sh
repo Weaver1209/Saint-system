@@ -32,6 +32,8 @@ PACKAGES=(
     wireplumber
     ttf-jetbrains-mono-nerd
     qt6ct
+    openconnect
+    networkmanager-openconnect
 )
 
 # Check if packages need installation

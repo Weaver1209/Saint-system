@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+# iitr-vpn: Helper script for IIT Roorkee Cisco AnyConnect VPN using OpenConnect
+# Server: vpn.iitr.ac.in
+
+SERVER="vpn.iitr.ac.in"
+PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/iitr-vpn.pid"
+
+is_connected() {
+    if ip addr show dev tun0 &>/dev/null || ip addr show dev vpn0 &>/dev/null || pgrep -f "openconnect.*vpn.iitr.ac.in" &>/dev/null; then
+        return 0
+    fi
+    return 1
+}
+
+get_vpn_ip() {
+    ip -4 -o addr show dev tun0 2>/dev/null | awk '{print $4}' | cut -d/ -f1 || ip -4 -o addr show dev vpn0 2>/dev/null | awk '{print $4}' | cut -d/ -f1
+}
+
+notify() {
+    local title="$1"
+    local msg="$2"
+    local urgency="${3:-normal}"
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send -a "IITR VPN" -i "network-vpn" -u "$urgency" "$title" "$msg"
+    fi
+}
+
+do_status() {
+    if is_connected; then
+        local vpn_ip
+        vpn_ip=$(get_vpn_ip)
+        echo "🟢 Connected to $SERVER (IP: ${vpn_ip:-active})"
+        return 0
+    else
+        echo "🔴 Disconnected from $SERVER"
+        return 1
+    fi
+}
+
+do_disconnect() {
+    echo "Disconnecting from $SERVER..."
+    if [ -f "$PIDFILE" ]; then
+        sudo kill -SIGINT "$(cat "$PIDFILE")" 2>/dev/null || sudo killall -SIGINT openconnect 2>/dev/null || true
+        rm -f "$PIDFILE"
+    else
+        sudo killall -SIGINT openconnect 2>/dev/null || sudo pkill -f "openconnect.*vpn.iitr.ac.in" 2>/dev/null || true
+    fi
+    sleep 1
+    if ! is_connected; then
+        echo "Successfully disconnected."
+        notify "IITR VPN Disconnected" "You are now disconnected from $SERVER." "normal"
+    else
+        echo "Force terminating openconnect..."
+        sudo pkill -9 -f "openconnect.*vpn.iitr.ac.in" 2>/dev/null || true
+        notify "IITR VPN Disconnected" "VPN tunnel terminated." "normal"
+    fi
+}
+
+do_connect() {
+    if is_connected; then
+        echo "Already connected to $SERVER (IP: $(get_vpn_ip))"
+        notify "IITR VPN" "Already connected to $SERVER." "low"
+        return 0
+    fi
+
+    if ! command -v openconnect >/dev/null 2>&1; then
+        echo "Error: openconnect is not installed."
+        echo "Install it with: sudo pacman -S openconnect networkmanager-openconnect"
+        notify "IITR VPN Error" "openconnect is not installed. Run sudo pacman -S openconnect" "critical"
+        exit 1
+    fi
+
+    echo "==> Connecting to IIT Roorkee VPN ($SERVER)..."
+    echo "==> Protocol: anyconnect"
+    echo "==> Enter your WiFi credentials when prompted."
+    echo ""
+
+    if [ "$1" = "-b" ] || [ "$1" = "--background" ]; then
+        read -rp "WiFi Username: " uname
+        read -rsp "WiFi Password: " upass
+        echo ""
+        echo "$upass" | sudo openconnect --protocol=anyconnect --user="$uname" --passwd-on-stdin --pid-file="$PIDFILE" --background "$SERVER"
+    else
+        sudo openconnect --protocol=anyconnect --pid-file="$PIDFILE" "$SERVER"
+    fi
+
+    sleep 1
+    if is_connected; then
+        notify "IITR VPN Connected" "Connected to $SERVER (IP: $(get_vpn_ip))" "normal"
+    fi
+}
+
+do_setup_nm() {
+    if ! command -v nmcli >/dev/null 2>&1; then
+        echo "Error: nmcli not found."
+        exit 1
+    fi
+
+    echo "Setting up NetworkManager connection for IITR VPN ($SERVER)..."
+    nmcli connection delete "IITR-VPN" 2>/dev/null || true
+    nmcli connection add type vpn vpn-type openconnect con-name "IITR-VPN" \
+        vpn.data "gateway=$SERVER,protocol=anyconnect,authtype=password"
+    echo "Created NetworkManager profile 'IITR-VPN'!"
+    echo "  Connect:    nmcli connection up IITR-VPN"
+    echo "  Disconnect: nmcli connection down IITR-VPN"
+}
+
+case "${1:-connect}" in
+    connect|start)
+        shift
+        do_connect "$@"
+        ;;
+    disconnect|stop)
+        do_disconnect
+        ;;
+    status)
+        do_status
+        ;;
+    toggle)
+        if is_connected; then
+            do_disconnect
+        else
+            do_connect
+        fi
+        ;;
+    setup-nm)
+        do_setup_nm
+        ;;
+    -h|--help|help)
+        echo "Usage: iitr-vpn [connect|disconnect|status|toggle|setup-nm] [-b|--background]"
+        echo ""
+        echo "Commands:"
+        echo "  connect       Connect to vpn.iitr.ac.in (default)"
+        echo "  disconnect    Disconnect from VPN"
+        echo "  status        Check VPN connection status"
+        echo "  toggle        Toggle VPN on/off"
+        echo "  setup-nm      Register IITR-VPN profile in NetworkManager"
+        ;;
+    *)
+        do_connect "$@"
+        ;;
+esac
