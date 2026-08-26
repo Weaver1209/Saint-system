@@ -2,14 +2,14 @@
   "geometry-of-main_window_geometry": {
     "frame_geometry": {
       "height": 826,
-      "width": 1528,
+      "width": 759,
       "x": 0,
       "y": 0
     },
     "full_screened": false,
     "geometry": {
       "height": 826,
-      "width": 1528,
+      "width": 759,
       "x": 0,
       "y": 0
     },
@@ -22,7 +22,7 @@
     },
     "qt": {
       "__class__": "bytearray",
-      "__value__": "AdnQywADAAAAAAAAAAAAAAAABfcAAAM5AAAAAAAAAAAAAAL2AAADOQAAAAACAAAABgAAAAAAAAAAAAAABfcAAAM5"
+      "__value__": "AdnQywADAAAAAAAAAAAAAAAAAvYAAAM5AAAAAAAAAAAAAAL2AAADOQAAAAACAAAABgAAAAAAAAAAAAAAAvYAAAM5"
     },
     "screen": {
       "depth": 32,
@@ -52,13 +52,13 @@
   },
   "main_window_state": {
     "__class__": "bytearray",
-    "__value__": "AAAA/wAAAAH9AAAAAgAAAAAAAAAAAAAAAPwCAAAAAvsAAAAQAHQAbwBjAC0AZABvAGMAawAAAAAA/////wAAAIoA////+wAAABYAcwBlAGEAcgBjAGgALQBkAG8AYwBrAAAAAAD/////AAAAmgD///8AAAABAAAAAAAAAAD8AgAAAAT7AAAAFgBsAG8AbwBrAHUAcAAtAGQAbwBjAGsAAAAAAP////8AAAChAP////sAAAAcAGIAbwBvAGsAbQBhAHIAawBzAC0AZABvAGMAawAAAAAA/////wAAAPIA////+wAAABwAaQBuAHMAcABlAGMAdABvAHIALQBkAG8AYwBrAAAAAAD/////AAAAFAD////7AAAAHgBoAGkAZwBoAGwAaQBnAGgAdABzAC0AZABvAGMAawAAAAAA/////wAAANcA////AAAF+AAAAzoAAAAEAAAABAAAAAgAAAAI/AAAAAEAAAAAAAAAAQAAAB4AYQBjAHQAaQBvAG4AcwBfAHQAbwBvAGwAYgBhAHICAAAAAP////8AAAAAAAAAAA=="
+    "__value__": "AAAA/wAAAAH9AAAAAgAAAAAAAAAAAAAAAPwCAAAAAvsAAAAQAHQAbwBjAC0AZABvAGMAawAAAAAA/////wAAAJEA////+wAAABYAcwBlAGEAcgBjAGgALQBkAG8AYwBrAAAAAAD/////AAAApQD///8AAAABAAAAAAAAAAD8AgAAAAT7AAAAFgBsAG8AbwBrAHUAcAAtAGQAbwBjAGsAAAAAAP////8AAAC3AP////sAAAAcAGIAbwBvAGsAbQBhAHIAawBzAC0AZABvAGMAawAAAAAA/////wAAAQkA////+wAAABwAaQBuAHMAcABlAGMAdABvAHIALQBkAG8AYwBrAAAAAAD/////AAAAFwD////7AAAAHgBoAGkAZwBoAGwAaQBnAGgAdABzAC0AZABvAGMAawAAAAAA/////wAAAOYA////AAAC9wAAAzoAAAAEAAAABAAAAAgAAAAI/AAAAAEAAAAAAAAAAQAAAB4AYQBjAHQAaQBvAG4AcwBfAHQAbwBvAGwAYgBhAHICAAAAAP////8AAAAAAAAAAA=="
   },
   "old_prefs_migrated": true,
   "session_data": {
     "base_font_size": 33,
     "controls_help_shown_count": 2,
-    "current_color_scheme": "*Catppuccin",
+    "current_color_scheme": "*Aether",
     "read_mode": "flow",
     "standalone_font_settings": {},
     "standalone_misc_settings": {
@@ -74,17 +74,24 @@
         ],
         "key": "/home/weaver/Documents/Books/Gu Zhen Ren/Reverend Insanity (18)/Reverend Insanity - Gu Zhen Ren.epub",
         "pathtoebook": "/home/weaver/Documents/Books/Gu Zhen Ren/Reverend Insanity (18)/Reverend Insanity - Gu Zhen Ren.epub",
-        "timestamp": "2026-08-26T10:42:33.636Z",
+        "timestamp": "2026-08-26T11:02:28.020Z",
         "title": "Reverend Insanity"
       }
     ],
     "user_color_schemes": {
       "*Catppuccin": {
-        "background": "#1e1e2e",
-        "foreground": "#cdd6f4",
-        "link": "#89b4fa",
+        "background": "#1A050A",
+        "foreground": "#F07C9E",
+        "link": "#a96790",
         "name": "Catppuccin"
+      },
+      "*Aether": {
+        "background": "#1A050A",
+        "foreground": "#F07C9E",
+        "link": "#a96790",
+        "name": "Aether"
       }
-    }
+    },
+    "user_stylesheet": "body, p, div, span, h1, h2, h3, h4, h5, h6 {\n  color: #F07C9E !important;\n  background-color: #1A050A !important;\n}\na {\n  color: #a96790 !important;\n}\n"
   }
 }

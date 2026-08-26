@@ -119,32 +119,32 @@
       255
     ]
   ],
-  "dark_palette_name": "",
+  "dark_palette_name": "__current__",
   "dark_palettes": {
     "__current__": {
-      "Accent": "#7abc43",
-      "AlternateBase": "#1e1e2e",
-      "Base": "#181825",
-      "BrightText": "#cdd6f4",
-      "BrightText-disabled": "#cdd6f4",
-      "Button": "#1e1e2e",
-      "ButtonText": "#cdd6f4",
-      "ButtonText-disabled": "#585b70",
-      "Highlight": "#cba6f7",
-      "HighlightedText": "#1e1e2e",
-      "HighlightedText-disabled": "#181825",
-      "Link": "#f5e0dc",
-      "LinkVisited": "#89b4fa",
-      "PlaceholderText": "#cdd6f4",
-      "PlaceholderText-disabled": "#cdd6f4",
-      "Text": "#cdd6f4",
-      "Text-disabled": "#585b70",
-      "ToolTipBase": "#11111b",
-      "ToolTipText": "#cdd6f4",
-      "ToolTipText-disabled": "#cdd6f4",
-      "Window": "#11111b",
-      "WindowText": "#cdd6f4",
-      "WindowText-disabled": "#585b70"
+      "Accent": "#a96790",
+      "AlternateBase": "#311e23",
+      "Base": "#140408",
+      "BrightText": "#F07C9E",
+      "BrightText-disabled": "#6b6364",
+      "Button": "#311e23",
+      "ButtonText": "#F07C9E",
+      "ButtonText-disabled": "#6b6364",
+      "Highlight": "#a96790",
+      "HighlightedText": "#140408",
+      "HighlightedText-disabled": "#140408",
+      "Link": "#a96790",
+      "LinkVisited": "#a96790",
+      "PlaceholderText": "#6b6364",
+      "PlaceholderText-disabled": "#6b6364",
+      "Text": "#F07C9E",
+      "Text-disabled": "#6b6364",
+      "ToolTipBase": "#1A050A",
+      "ToolTipText": "#F07C9E",
+      "ToolTipText-disabled": "#6b6364",
+      "Window": "#1A050A",
+      "WindowText": "#F07C9E",
+      "WindowText-disabled": "#6b6364"
     }
   },
   "geometry-of-calibre_main_window_geometry": {
@@ -163,14 +163,14 @@
     },
     "maximized": true,
     "normal_geometry": {
-      "height": 826,
-      "width": 1528,
+      "height": -1,
+      "width": -1,
       "x": 0,
       "y": 0
     },
     "qt": {
       "__class__": "bytearray",
-      "__value__": "AdnQywADAAAAAAAAAAAAAAAABfcAAAM5AAAAAAAAAAAAAAX3AAADOQAAAAACAAAABgAAAAAAAAAAAAAABfcAAAM5"
+      "__value__": "AdnQywADAAAAAAAAAAAAAAAABfcAAAM5AAAAAAAAAAD////+/////gAAAAACAAAABgAAAAAAAAAAAAAABfcAAAM5"
     },
     "screen": {
       "depth": 32,
@@ -302,7 +302,7 @@
   },
   "grid view visible": true,
   "library_usage_stats": {
-    "/home/weaver/Documents/Books": 12
+    "/home/weaver/Documents/Books": 16
   },
   "light_palette_name": "__current__",
   "light_palettes": {
