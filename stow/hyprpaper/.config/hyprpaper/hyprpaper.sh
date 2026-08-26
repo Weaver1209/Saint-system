@@ -63,3 +63,9 @@ else
     pkill -x hyprpaper >/dev/null 2>&1 || true
     hyprpaper -c "$CONFIG_FILE" >/dev/null 2>&1 &
 fi
+
+# Automatically re-theme desktop with Aether
+if [ -x "$HOME/.config/aether/bin/walt-aether" ]; then
+    "$HOME/.config/aether/bin/walt-aether" "$WALLPAPER" --force >/dev/null 2>&1 &
+fi
+

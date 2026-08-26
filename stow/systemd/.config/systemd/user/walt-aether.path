@@ -5,6 +5,7 @@ Description=Watch Walt wallpaper changes
 PathModified=%h/.config/walt/state.json
 PathModified=%h/.config/walt/rotation-state.json
 PathModified=%h/.cache/walt/logs/walt.log
+PathModified=%h/.config/hyprpaper/hyprpaper.conf
 Unit=walt-aether.service
 
 [Install]

@@ -9,10 +9,32 @@ flock -w 30 9 || exit 0
 sleep 0.5
 
 wp=""
-if command -v hyprctl >/dev/null 2>&1; then
-    wp=$(hyprctl hyprpaper listactive 2>/dev/null | head -n 1 | cut -d' ' -f2-)
+
+# 0. Check CLI argument for direct wallpaper path
+for arg in "$@"; do
+    if [ "$arg" != "--force" ] && [ -f "$arg" ]; then
+        wp="$arg"
+        break
+    fi
+done
+
+# 1. Check hyprpaper.conf
+if [ -z "$wp" ] || [ ! -f "$wp" ]; then
+    if [ -f "$HOME/.config/hyprpaper/hyprpaper.conf" ]; then
+        hp_wp=$(grep -E '^[[:space:]]*path[[:space:]]*=' "$HOME/.config/hyprpaper/hyprpaper.conf" 2>/dev/null | tail -n 1 | cut -d'=' -f2- | tr -d ' "')
+        [ -n "$hp_wp" ] && [ -f "$hp_wp" ] && wp="$hp_wp"
+    fi
 fi
 
+# 2. Check hyprctl hyprpaper listactive
+if [ -z "$wp" ] || [ ! -f "$wp" ]; then
+    if command -v hyprctl >/dev/null 2>&1; then
+        hl_wp=$(hyprctl hyprpaper listactive 2>/dev/null | head -n 1 | cut -d' ' -f2-)
+        [ -n "$hl_wp" ] && [ -f "$hl_wp" ] && wp="$hl_wp"
+    fi
+fi
+
+# 3. Check walt state files
 if [ -z "$wp" ] || [ ! -f "$wp" ]; then
     for f in rotation-state.json state.json; do
         wp=$(jq -r '.last_wallpaper // empty' "$HOME/.config/walt/$f" 2>/dev/null)
