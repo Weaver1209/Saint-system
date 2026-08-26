@@ -3,7 +3,11 @@ set -euo pipefail
 [[ ${1:-} == --meta ]] || { echo 'usage: kiku-network-qr --meta [interface]' >&2; exit 2; }
 iface=${2:-$(ip route show default | awk 'NR==1{print $5}')}
 ssid=$(iw dev "$iface" link 2>/dev/null | awk -F': ' '/SSID:/{print $2; exit}')
-security=$(nmcli -t -f GENERAL.CONNECTION dev show "$iface" 2>/dev/null | cut -d: -f2- | xargs -r nmcli -g 802-11-wireless-security.key-mgmt connection show 2>/dev/null || true)
+connection=$(nmcli -t -f GENERAL.CONNECTION dev show "$iface" 2>/dev/null | cut -d: -f2-)
+security=$(nmcli -g 802-11-wireless-security.key-mgmt connection show "$connection" 2>/dev/null || true)
 [[ -n $security ]] || security=nopass
 printf 'meta\t%s\t%s\t%s\n' "$iface" "$security" "$ssid"
-# A valid empty matrix lets the UI report unavailable instead of spawning a missing helper.
+if [[ $security == nopass ]]; then auth="nopass"; else auth="WPA"; fi
+password=$(nmcli -s -g 802-11-wireless-security.psk connection show "$connection" 2>/dev/null || true)
+wifi="WIFI:T:${auth};S:${ssid//\\/\\\\};P:${password//\\/\\\\};H:false;;"
+qrencode -t ASCII "$wifi" | awk '{ line=""; for (i=1; i<=length($0); i+=2) line=line ((substr($0,i,2) ~ /#/) ? "1" : "0"); print line }'

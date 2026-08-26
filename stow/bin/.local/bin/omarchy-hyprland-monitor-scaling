@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+scale=${1:-}
+[[ $scale =~ ^([1-4](\.([0-9]+))?)$ ]] || { echo 'usage: omarchy-hyprland-monitor-scaling SCALE' >&2; exit 2; }
+monitor=$(hyprctl monitors -j | jq -r 'map(select(.focused))[0].name // .[0].name')
+[[ -n $monitor && $monitor != null ]] || exit 1
+hyprctl keyword monitor "$monitor,preferred,auto,${scale}"
