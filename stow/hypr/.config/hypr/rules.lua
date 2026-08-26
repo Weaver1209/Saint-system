@@ -17,3 +17,12 @@ hl.window_rule({
     size  = "650 420",
     move  = "monitor_w-730 45",
 })
+
+-- Float walt (wallpaper manager)
+hl.window_rule({
+    name   = "walt",
+    match  = { class = "^walt$" },
+    float  = true,
+    size   = "900 600",
+    center = true,
+})

@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
-# Path to Wallpapers folder in Media/Pictures
-WALLPAPER_DIR="$HOME/Media/Pictures/Wallpapers"
+# Path to Wallpapers folder
+if [ -d "$HOME/Pictures/wallpaper" ]; then
+    WALLPAPER_DIR="$HOME/Pictures/wallpaper"
+elif [ -d "$HOME/picture/wallpaper" ]; then
+    WALLPAPER_DIR="$HOME/picture/wallpaper"
+else
+    WALLPAPER_DIR="$HOME/Media/Pictures/Wallpapers"
+fi
 CONFIG_DIR="$HOME/.config/hyprpaper"
 CONFIG_FILE="$CONFIG_DIR/hyprpaper.conf"
 
@@ -25,6 +31,9 @@ fi
 # Generate hyprpaper.conf dynamically using hyprpaper v0.8+ block syntax
 {
     echo "# Managed automatically by ~/.config/hyprpaper/hyprpaper.sh"
+    echo "splash = false"
+    echo "splash_opacity = 0"
+    echo "ipc = on"
     if [ -n "$MONITORS" ]; then
         for MON in $MONITORS; do
             echo "wallpaper {"

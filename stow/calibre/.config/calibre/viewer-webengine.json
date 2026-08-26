@@ -1,0 +1,90 @@
+{
+  "geometry-of-main_window_geometry": {
+    "frame_geometry": {
+      "height": 826,
+      "width": 1528,
+      "x": 0,
+      "y": 0
+    },
+    "full_screened": false,
+    "geometry": {
+      "height": 826,
+      "width": 1528,
+      "x": 0,
+      "y": 0
+    },
+    "maximized": true,
+    "normal_geometry": {
+      "height": 826,
+      "width": 759,
+      "x": 0,
+      "y": 0
+    },
+    "qt": {
+      "__class__": "bytearray",
+      "__value__": "AdnQywADAAAAAAAAAAAAAAAABfcAAAM5AAAAAAAAAAAAAAL2AAADOQAAAAACAAAABgAAAAAAAAAAAAAABfcAAAM5"
+    },
+    "screen": {
+      "depth": 32,
+      "device_pixel_ratio": 2.0,
+      "geometry_in_logical_pixels": {
+        "height": 864,
+        "width": 1536,
+        "x": 0,
+        "y": 0
+      },
+      "index_in_screens_list": 0,
+      "manufacturer": "Chimei Innolux Corporation",
+      "model": "0x1560",
+      "name": "eDP-1",
+      "serial": "",
+      "size_in_logical_pixels": {
+        "height": 864,
+        "width": 1536
+      },
+      "virtual_geometry": {
+        "height": 864,
+        "width": 1536,
+        "x": 0,
+        "y": 0
+      }
+    }
+  },
+  "main_window_state": {
+    "__class__": "bytearray",
+    "__value__": "AAAA/wAAAAH9AAAAAgAAAAAAAAAAAAAAAPwCAAAAAvsAAAAQAHQAbwBjAC0AZABvAGMAawAAAAAA/////wAAAIoA////+wAAABYAcwBlAGEAcgBjAGgALQBkAG8AYwBrAAAAAAD/////AAAAmgD///8AAAABAAAAAAAAAAD8AgAAAAT7AAAAFgBsAG8AbwBrAHUAcAAtAGQAbwBjAGsAAAAAAP////8AAAChAP////sAAAAcAGIAbwBvAGsAbQBhAHIAawBzAC0AZABvAGMAawAAAAAA/////wAAAPIA////+wAAABwAaQBuAHMAcABlAGMAdABvAHIALQBkAG8AYwBrAAAAAAD/////AAAAFAD////7AAAAHgBoAGkAZwBoAGwAaQBnAGgAdABzAC0AZABvAGMAawAAAAAA/////wAAANcA////AAAF+AAAAzoAAAAEAAAABAAAAAgAAAAI/AAAAAEAAAAAAAAAAQAAAB4AYQBjAHQAaQBvAG4AcwBfAHQAbwBvAGwAYgBhAHICAAAAAP////8AAAAAAAAAAA=="
+  },
+  "old_prefs_migrated": true,
+  "session_data": {
+    "base_font_size": 33,
+    "controls_help_shown_count": 2,
+    "current_color_scheme": "*Catppuccin",
+    "read_mode": "flow",
+    "standalone_font_settings": {},
+    "standalone_misc_settings": {
+      "remember_last_read": true,
+      "remember_window_geometry": false,
+      "save_annotations_in_ebook": true,
+      "singleinstance": false
+    },
+    "standalone_recently_opened": [
+      {
+        "authors": [
+          "Gu Zhen Ren"
+        ],
+        "key": "/home/weaver/Documents/Books/Gu Zhen Ren/Reverend Insanity (18)/Reverend Insanity - Gu Zhen Ren.epub",
+        "pathtoebook": "/home/weaver/Documents/Books/Gu Zhen Ren/Reverend Insanity (18)/Reverend Insanity - Gu Zhen Ren.epub",
+        "timestamp": "2026-08-26T05:18:46.087Z",
+        "title": "Reverend Insanity"
+      }
+    ],
+    "user_color_schemes": {
+      "*Catppuccin": {
+        "background": "#1e1e2e",
+        "foreground": "#cdd6f4",
+        "name": "Catppuccin",
+        "link": "#89b4fa"
+      }
+    }
+  }
+}

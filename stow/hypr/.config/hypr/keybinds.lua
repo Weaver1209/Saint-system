@@ -1,5 +1,5 @@
 local terminal = "ghostty"
-local browser = "google-chrome-stable"
+local browser = "firefox"
 local launcher = "rofi -show drun"
 
 -- Terminal
@@ -86,10 +86,23 @@ hl.bind(
     { description = "Open Spotify" }
 )
 
+-- Walt (Wallpaper Manager)
 hl.bind(
     "SUPER + SHIFT + D",
-    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/dns-toggle.sh menu"),
-    { description = "Open DNS Profile Menu" }
+    hl.dsp.exec_cmd("ghostty --class=walt -e walt"),
+    { description = "Open Walt wallpaper manager" }
+)
+
+hl.bind(
+    "SUPER + CTRL + D",
+    hl.dsp.exec_cmd("walt gui"),
+    { description = "Open Walt GUI" }
+)
+
+hl.bind(
+    "SUPER + D",
+    hl.dsp.exec_cmd("walt random"),
+    { description = "Set random wallpaper with Walt" }
 )
 
 hl.bind(

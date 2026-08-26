@@ -75,6 +75,7 @@ Panel {
   property bool wifiStationAvailable: false
   property string dnsProvider: ""
   property string pendingDnsProvider: ""
+  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
   // Wi-Fi band state from `kiku-network-band`. `bandCurrent` is the band
   // the radio is actually on; `bandSelected` is the pinned choice ("auto" when
   // nothing is pinned), and the two differ whenever Auto is in effect.
@@ -451,7 +452,7 @@ Panel {
       dnsProc.running = true
     }
     if (!bandProc.running) {
-      bandProc.command = ["kiku-network-band"]
+      bandProc.command = [root.helperDir + "/kiku-network-band"]
       bandProc.running = true
     }
     if (wifiDevice) {
@@ -614,7 +615,7 @@ Panel {
     if (!band || actionProc.running) return
 
     root.pendingBand = band
-    actionProc.command = ["kiku-network-band", band]
+    actionProc.command = [root.helperDir + "/kiku-network-band", band]
     actionProc.running = true
   }
 
@@ -632,7 +633,7 @@ Panel {
   }
 
   function dnsCommand(provider) {
-    var command = "kiku-dns"
+    var command = root.helperDir + "/kiku-dns"
     if (provider) command += " " + Util.shellQuote(provider)
     return command
   }
@@ -641,7 +642,7 @@ Panel {
     if (!provider || actionProc.running) return
 
     if (provider === "Custom") {
-      var launcher = "ghostty -e kiku-dns Custom"
+      var launcher = "ghostty -e " + root.helperDir + "/kiku-dns Custom"
       if (root.bar) {
         root.bar.run(launcher)
       }
@@ -650,7 +651,7 @@ Panel {
     }
 
     root.pendingDnsProvider = provider
-    actionProc.command = ["kiku-dns", provider]
+    actionProc.command = [root.helperDir + "/kiku-dns", provider]
     actionProc.running = true
     root.close()
   }
@@ -784,7 +785,7 @@ Panel {
   // Pulls everything we want about the active route's interface in one shot.
   Process {
     id: detailsProc
-    command: ["kiku-network-status", "--verbose"]
+    command: [root.helperDir + "/kiku-network-status", "--verbose"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: root.updateDetails(text)
@@ -833,7 +834,7 @@ Panel {
     running: root.opened
     onTriggered: {
       if (bandProc.running) return
-      bandProc.command = ["kiku-network-band"]
+      bandProc.command = [root.helperDir + "/kiku-network-band"]
       bandProc.running = true
     }
   }
@@ -1150,9 +1151,11 @@ Panel {
             width: parent.width
 
             readonly property string title: {
+              if (root.connectedWifiNetwork) return root.connectedWifiNetwork.name || "Wi-Fi"
               if (root.info.type === "wifi") return root.info.ssid || "Wi-Fi"
               if (root.info.type === "ethernet") return "Ethernet"
-              return root.info.iface || (root.kind === "disconnected" ? "Disconnected" : "No connection")
+              if (root.kind === "ethernet") return "Ethernet"
+              return "Disconnected"
             }
             readonly property string detail: root.headerDetail()
 

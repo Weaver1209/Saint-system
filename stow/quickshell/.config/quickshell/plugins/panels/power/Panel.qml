@@ -19,6 +19,7 @@ Panel {
   property string activeProfile: ""
   property int profileIndex: 0
   property bool cursorActive: false
+  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
   readonly property bool showPercentage: setting("showPercentage", true) !== false
   // With the percentage shown the button paints a text block wider than an
   // icon, so the open-panel mark takes the painted width instead of the
@@ -27,8 +28,7 @@ Panel {
   readonly property bool batteryPresent: {
     var device = UPower.displayDevice
     if (device && device.isPresent) return true
-    if (root.batteryInfo && root.batteryInfo.percentage) return true
-    return true
+    return !!(root.batteryInfo && root.batteryInfo.percentage)
   }
 
   function upowerStates() {
@@ -184,7 +184,7 @@ Panel {
 
   function setProfile(profile) {
     if (!profile || actionProc.running) return
-    actionProc.command = ["kiku-powerprofiles-set", root.discharging ? "battery" : "ac", profile]
+    actionProc.command = [root.helperDir + "/kiku-powerprofiles-set", root.discharging ? "battery" : "ac", profile]
     actionProc.running = true
   }
 
@@ -222,19 +222,19 @@ Panel {
 
   Process {
     id: batteryProc
-    command: ["kiku-battery-status", "--shell"]
+    command: [root.helperDir + "/kiku-battery-status", "--shell"]
     stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.updateKeyValue(text, "battery") }
   }
 
   Process {
     id: profilesProc
-    command: ["kiku-powerprofiles-list", "--active-state"]
+    command: [root.helperDir + "/kiku-powerprofiles-list", "--active-state"]
     stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.updateProfiles(text) }
   }
 
   Process {
     id: systemProc
-    command: ["kiku-system-stats"]
+    command: [root.helperDir + "/kiku-system-stats"]
     stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.updateKeyValue(text, "system") }
   }
 
@@ -385,7 +385,9 @@ Panel {
 
           Text {
             id: heroPercent
-            text: root.batteryInfo.percentage || "—"
+            text: root.batteryInfo.percentage || (UPower.displayDevice && UPower.displayDevice.isPresent
+              ? Math.round(Number(UPower.displayDevice.percentage || 0) * 100) + "%"
+              : "—")
             color: root.bar.foreground
             font.family: root.bar.fontFamily
             font.pixelSize: Style.font.displayLarge
