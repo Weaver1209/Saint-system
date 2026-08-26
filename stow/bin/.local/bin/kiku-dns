@@ -169,30 +169,31 @@ apply_system_dns() {
 
   if [ "$profile" = "default" ] || [ "$profile" = "dhcp" ]; then
     stop_dnsproxy
-    for iface in $ifaces; do
-      if command -v resolvectl &>/dev/null; then
-        resolvectl revert "$iface" 2>/dev/null || true
-        resolvectl default-route "$iface" yes 2>/dev/null || true
-      fi
-      if command -v nmcli &>/dev/null; then
-        nmcli dev reapply "$iface" 2>/dev/null || true
-      fi
-    done
-    if command -v resolvectl &>/dev/null; then
-      resolvectl flush-caches 2>/dev/null || true
-    fi
   else
     start_dnsproxy "$profile"
-    for iface in $ifaces; do
-      if command -v resolvectl &>/dev/null; then
-        resolvectl default-route "$iface" yes 2>/dev/null || true
-        resolvectl dns "$iface" "${LISTEN_ADDR}:${PORT}" 2>/dev/null || true
-        resolvectl dnsovertls "$iface" no 2>/dev/null || true
-      fi
-    done
-    if command -v resolvectl &>/dev/null; then
-      resolvectl flush-caches 2>/dev/null || true
-    fi
+  fi
+
+  # Run all privileged resolver changes in one polkit transaction. Calling
+  # pkexec once per interface/operation caused a password prompt storm.
+  if command -v pkexec &>/dev/null; then
+    pkexec bash -c '
+      profile="$1"; port="$2"; shift 2
+      for iface in "$@"; do
+        if [[ "$profile" == default || "$profile" == dhcp ]]; then
+          resolvectl revert "$iface" || true
+          resolvectl default-route "$iface" yes || true
+          nmcli dev reapply "$iface" || true
+        else
+          resolvectl default-route "$iface" yes || true
+          resolvectl dns "$iface" "127.0.0.1:${port}" || true
+          resolvectl dnsovertls "$iface" no || true
+        fi
+      done
+      resolvectl flush-caches || true
+    ' kiku-dns "$profile" "$PORT" $ifaces
+  else
+    echo "pkexec is required to apply DNS settings" >&2
+    return 1
   fi
 
   echo "$profile" > "$CONFIG_FILE"
