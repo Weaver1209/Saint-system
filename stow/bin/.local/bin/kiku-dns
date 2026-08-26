@@ -27,6 +27,9 @@ get_profile_info() {
     cloudflare)
       echo "Cloudflare (Fast & Privacy First)"
       ;;
+    google)
+      echo "Google (Fast & Global Anycast)"
+      ;;
     mullvad)
       echo "Mullvad (Adblock & Privacy)"
       ;;
@@ -96,8 +99,8 @@ start_dnsproxy() {
   fi
 
   local upstreams=()
-  local bootstraps=("--bootstrap" "9.9.9.9:53" "--bootstrap" "1.1.1.1:53" "--bootstrap" "94.140.14.14:53")
-  local fallbacks=("--fallback" "9.9.9.9:53" "--fallback" "1.1.1.1:53")
+  local bootstraps=("--bootstrap" "9.9.9.9:53" "--bootstrap" "1.1.1.1:53" "--bootstrap" "8.8.8.8:53" "--bootstrap" "94.140.14.14:53")
+  local fallbacks=("--fallback" "9.9.9.9:53" "--fallback" "1.1.1.1:53" "--fallback" "8.8.8.8:53")
 
   case "$profile" in
     quad9)
@@ -117,6 +120,12 @@ start_dnsproxy() {
       upstreams=(
         "--upstream" "https://cloudflare-dns.com/dns-query"
         "--upstream" "tls://1.1.1.1"
+      )
+      ;;
+    google)
+      upstreams=(
+        "--upstream" "https://dns.google/dns-query"
+        "--upstream" "tls://dns.google"
       )
       ;;
     mullvad)
@@ -182,7 +191,7 @@ apply_system_dns() {
         if [[ "$profile" == default || "$profile" == dhcp ]]; then
           resolvectl revert "$iface" || true
           resolvectl default-route "$iface" yes || true
-          nmcli dev reapply "$iface" || true
+          nmcli dev reapply "$iface" 2>/dev/null || true
         else
           resolvectl default-route "$iface" yes || true
           resolvectl dns "$iface" "127.0.0.1:${port}" || true
@@ -217,11 +226,11 @@ notify() {
 set_profile() {
   local profile="${1,,}"
   case "$profile" in
-    quad9|adguard|cloudflare|mullvad|default|dhcp)
+    quad9|adguard|cloudflare|google|mullvad|default|dhcp)
       ;;
     *)
       echo "Unknown profile: $profile"
-      echo "Valid profiles: quad9, adguard, cloudflare, mullvad, default"
+      echo "Valid profiles: quad9, adguard, cloudflare, google, mullvad, default"
       exit 1
       ;;
   esac
@@ -230,9 +239,9 @@ set_profile() {
   local desc
   desc=$(get_profile_info "$profile")
   if [ "$profile" = "default" ] || [ "$profile" = "dhcp" ]; then
-    notify "DNS Switched" "Mode: $desc" "network-workgroup"
+    notify "DNS Switched" "Mode: $desc" "network-wireless-symbolic"
   else
-    notify "Secure DNS Active" "Provider: $desc\nSecurity: DoH/DoQ + DNSSEC + HTTP/3" "security-high"
+    notify "Secure DNS Active" "Provider: $desc\nSecurity: DoH/DoQ + DNSSEC + HTTP/3" "network-wireless-symbolic"
   fi
   echo "Active DNS profile: $profile ($desc)"
 }

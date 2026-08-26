@@ -139,7 +139,7 @@ Panel {
   readonly property bool speedHeaderHasCursor: cursorActive && focusSection === "header" && headerIndex === speedHeaderIndex
   readonly property bool toggleHeaderHasCursor: cursorActive && focusSection === "header" && headerIndex === toggleHeaderIndex
   readonly property string toggleHint: Networking.wifiEnabled ? "Turn Wi-Fi off" : "Turn Wi-Fi on"
-  readonly property var dnsProviders: ["DHCP", "Cloudflare", "Quad9", "AdGuard", "Mullvad"]
+  readonly property var dnsProviders: ["DHCP", "Cloudflare", "Quad9", "AdGuard", "Google", "Mullvad"]
   property int dnsIndex: 0
   // ["2.4", "5", ...], or empty when there is nothing to choose between.
   // Wi-Fi only: on Ethernet the band of a secondary radio is not what the
@@ -644,7 +644,7 @@ Panel {
   function setDns(provider) {
     if (!provider) return
 
-    var profiles = { DHCP: "default", Cloudflare: "cloudflare", Quad9: "quad9", AdGuard: "adguard", Mullvad: "mullvad" }
+    var profiles = { DHCP: "default", Cloudflare: "cloudflare", Quad9: "quad9", AdGuard: "adguard", Google: "google", Mullvad: "mullvad" }
     var profile = profiles[provider]
     if (!profile) return
 
@@ -1416,6 +1416,7 @@ Panel {
                   : modelData === "Quad9" ? "Quad9 (9.9.9.9) - Malware Blocking & Privacy"
                   : modelData === "AdGuard" ? "AdGuard (94.140.14.14) - Ad & Tracker Blocking"
                   : modelData === "Google" ? "Google (8.8.8.8) - Global Anycast DNS"
+                  : modelData === "Mullvad" ? "Mullvad - Adblock & Privacy"
                   : "Set custom DNS servers"
                 width: parent.width
                 onClicked: root.setDns(provider)
