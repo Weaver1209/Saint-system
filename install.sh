@@ -41,12 +41,6 @@ mkdir -p "$HOME/Media/Pictures/Wallpapers"
 mkdir -p "$HOME/Pictures/Screenshots"
 mkdir -p "$HOME/.local/bin"
 
-# Keep Omarchy's runtime wallpaper link valid after wallpaper migrations.
-mkdir -p "$HOME/.local/state/omarchy/current"
-if [[ -f "$HOME/Pictures/wallpaper/wallpaper.png" ]]; then
-    ln -sfn "$HOME/Pictures/wallpaper/wallpaper.png" "$HOME/.local/state/omarchy/current/background"
-fi
-
 echo "==> Ensuring script execute permissions..."
 chmod +x "$HOME/Saint-system/stow/bin/.local/bin/"* 2>/dev/null || true
 chmod +x "$HOME/Saint-system/stow/hypr/.config/hypr/scripts/"*.sh 2>/dev/null || true
