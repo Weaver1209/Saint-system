@@ -214,7 +214,7 @@ notify() {
 }
 
 set_profile() {
-  local profile="$1"
+  local profile="${1,,}"
   case "$profile" in
     quad9|adguard|cloudflare|mullvad|default|dhcp)
       ;;

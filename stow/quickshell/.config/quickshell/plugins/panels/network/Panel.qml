@@ -139,7 +139,7 @@ Panel {
   readonly property bool speedHeaderHasCursor: cursorActive && focusSection === "header" && headerIndex === speedHeaderIndex
   readonly property bool toggleHeaderHasCursor: cursorActive && focusSection === "header" && headerIndex === toggleHeaderIndex
   readonly property string toggleHint: Networking.wifiEnabled ? "Turn Wi-Fi off" : "Turn Wi-Fi on"
-  readonly property var dnsProviders: ["DHCP", "Cloudflare", "Quad9", "AdGuard", "Google", "Custom"]
+  readonly property var dnsProviders: ["DHCP", "Cloudflare", "Quad9", "AdGuard", "Mullvad"]
   property int dnsIndex: 0
   // ["2.4", "5", ...], or empty when there is nothing to choose between.
   // Wi-Fi only: on Ethernet the band of a secondary radio is not what the
@@ -853,6 +853,7 @@ Panel {
         if (exitCode === 0) root.dnsProvider = root.pendingDnsProvider
         root.pendingDnsProvider = ""
       }
+      if (exitCode !== 0 && actionStderr.text) console.warn("kiku-dns/action failed:", actionStderr.text)
       if (root.pendingBand !== "") {
         // A refused or reverted pin leaves bandSelected alone, so the pills
         // keep showing what is actually in force rather than what was asked.
@@ -1413,7 +1414,7 @@ Panel {
               DnsProviderPill {
                 id: dnsPill
                 provider: modelData
-                index: index
+                slot: index
                 tooltipText: modelData === "DHCP" ? "Use DNS from DHCP (Default)"
                   : modelData === "Cloudflare" ? "Cloudflare (1.1.1.1) - Fast & Private"
                   : modelData === "Quad9" ? "Quad9 (9.9.9.9) - Malware Blocking & Privacy"
@@ -1538,7 +1539,7 @@ Panel {
   component DnsProviderPill: Button {
     id: pill
     required property string provider
-    required property int index
+    required property int slot
 
     text: provider
     fontSize: Style.font.caption
@@ -1552,13 +1553,13 @@ Panel {
     // `current DNS` is the pill's `active` fill; the keyboard cursor lights
     // up `hasCursor`.
     active: root.dnsProvider === provider
-    hasCursor: root.cursorActive && root.focusSection === "dns" && root.dnsIndex === index
+    hasCursor: root.cursorActive && root.focusSection === "dns" && root.dnsIndex === slot
 
     onHovered: function(isHovered) {
       if (!isHovered) return
       root.cursorActive = true
       root.focusSection = "dns"
-      root.dnsIndex = pill.index
+      root.dnsIndex = pill.slot
     }
   }
 
