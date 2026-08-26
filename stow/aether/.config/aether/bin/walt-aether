@@ -51,6 +51,11 @@ if [ -x "$HOME/.config/aether/bin/theme-chromium" ]; then
     "$HOME/.config/aether/bin/theme-chromium" >/dev/null 2>&1 || true
 fi
 
+# Apply theme to Calibre Library & E-book Viewer
+if [ -x "$HOME/.config/aether/bin/theme-calibre" ]; then
+    "$HOME/.config/aether/bin/theme-calibre" >/dev/null 2>&1 || true
+fi
+
 # GTK 3 & GTK 4 apps (Nautilus, etc.) re-read ~/.config/gtk-4.0/gtk.css dynamically
 # Sync GNOME / Libadwaita accent color enum
 if command -v gsettings >/dev/null 2>&1 && [ -f "$THEME_DIR/colors.toml" ]; then

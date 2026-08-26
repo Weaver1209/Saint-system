@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""
+theme-calibre: Apply Aether dynamic theme colors to Calibre Library & E-book Viewer.
+Updates gui.json and viewer-webengine.json atomically.
+"""
+
+import os
+import sys
+import json
+import tomllib
+from pathlib import Path
+
+AETHER_THEME_DIR = Path.home() / ".config" / "aether" / "theme"
+COLORS_TOML_FILE = AETHER_THEME_DIR / "colors.toml"
+CALIBRE_CONFIG_DIR = Path.home() / ".config" / "calibre"
+
+GUI_JSON_FILE = CALIBRE_CONFIG_DIR / "gui.json"
+VIEWER_JSON_FILE = CALIBRE_CONFIG_DIR / "viewer-webengine.json"
+
+
+def main():
+    if not COLORS_TOML_FILE.exists():
+        print(f"[theme-calibre] colors.toml not found at {COLORS_TOML_FILE}", file=sys.stderr)
+        return
+
+    with open(COLORS_TOML_FILE, "rb") as f:
+        colors = tomllib.load(f)
+
+    bg = colors.get("background") or colors.get("bg", "#1A050A")
+    fg = colors.get("foreground") or colors.get("fg", "#F07C9E")
+    dark_bg = colors.get("dark_bg", "#140408")
+    lighter_bg = colors.get("lighter_bg", "#311e23")
+    accent = colors.get("accent", "#a96790")
+    muted = colors.get("muted", "#6b6364")
+
+    # 1. Update viewer-webengine.json (Calibre E-book Reader)
+    if VIEWER_JSON_FILE.exists():
+        try:
+            with open(VIEWER_JSON_FILE, "r", encoding="utf-8") as f:
+                viewer_data = json.load(f)
+
+            if "session_data" not in viewer_data:
+                viewer_data["session_data"] = {}
+
+            sd = viewer_data["session_data"]
+            sd["current_color_scheme"] = "*Aether"
+
+            if "user_color_schemes" not in sd:
+                sd["user_color_schemes"] = {}
+
+            sd["user_color_schemes"]["*Aether"] = {
+                "background": bg,
+                "foreground": fg,
+                "link": accent,
+                "name": "Aether"
+            }
+            sd["user_color_schemes"]["*Catppuccin"] = {
+                "background": bg,
+                "foreground": fg,
+                "link": accent,
+                "name": "Catppuccin"
+            }
+
+            # Inject theme stylesheet for reader web view content
+            sd["user_stylesheet"] = (
+                f"body, p, div, span, h1, h2, h3, h4, h5, h6 {{\n"
+                f"  color: {fg} !important;\n"
+                f"  background-color: {bg} !important;\n"
+                f"}}\n"
+                f"a {{\n"
+                f"  color: {accent} !important;\n"
+                f"}}\n"
+            )
+
+            tmp_viewer = VIEWER_JSON_FILE.with_suffix(f".tmp.{os.getpid()}")
+            with open(tmp_viewer, "w", encoding="utf-8") as f:
+                json.dump(viewer_data, f, indent=2, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            tmp_viewer.replace(VIEWER_JSON_FILE)
+            print(f"[theme-calibre] Updated {VIEWER_JSON_FILE}")
+        except Exception as e:
+            print(f"[theme-calibre] Error updating viewer-webengine.json: {e}", file=sys.stderr)
+
+    # 2. Update gui.json (Calibre Main Window)
+    if GUI_JSON_FILE.exists():
+        try:
+            with open(GUI_JSON_FILE, "r", encoding="utf-8") as f:
+                gui_data = json.load(f)
+
+            gui_data["color_palette"] = "dark"
+            gui_data["dark_palette_name"] = "__current__"
+
+            if "dark_palettes" not in gui_data:
+                gui_data["dark_palettes"] = {}
+
+            gui_data["dark_palettes"]["__current__"] = {
+                "Accent": accent,
+                "AlternateBase": lighter_bg,
+                "Base": dark_bg,
+                "BrightText": fg,
+                "BrightText-disabled": muted,
+                "Button": lighter_bg,
+                "ButtonText": fg,
+                "ButtonText-disabled": muted,
+                "Highlight": accent,
+                "HighlightedText": dark_bg,
+                "HighlightedText-disabled": dark_bg,
+                "Link": accent,
+                "LinkVisited": accent,
+                "PlaceholderText": muted,
+                "PlaceholderText-disabled": muted,
+                "Text": fg,
+                "Text-disabled": muted,
+                "ToolTipBase": bg,
+                "ToolTipText": fg,
+                "ToolTipText-disabled": muted,
+                "Window": bg,
+                "WindowText": fg,
+                "WindowText-disabled": muted
+            }
+
+            tmp_gui = GUI_JSON_FILE.with_suffix(f".tmp.{os.getpid()}")
+            with open(tmp_gui, "w", encoding="utf-8") as f:
+                json.dump(gui_data, f, indent=2, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            tmp_gui.replace(GUI_JSON_FILE)
+            print(f"[theme-calibre] Updated {GUI_JSON_FILE}")
+        except Exception as e:
+            print(f"[theme-calibre] Error updating gui.json: {e}", file=sys.stderr)
+
+
+if __name__ == "__main__":
+    main()
