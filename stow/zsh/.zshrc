@@ -57,4 +57,4 @@ fi
 
 export PATH=$PATH:/home/weaver/.spicetify
 
-. "$HOME/.local/share/../bin/env"
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
