@@ -9,6 +9,7 @@ Item {
 
   property var shell: null
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
 
   readonly property int batteryThreshold: 10
   property string pendingPowerSource: ""
@@ -36,7 +37,7 @@ Item {
   function sendLowBatteryWarning(level) {
     if (warningProcess.running) return
     warningProcess.command = [
-      "kiku-battery-low",
+      root.helperDir + "/kiku-battery-low",
       String(level)
     ]
     warningProcess.running = true
@@ -48,7 +49,7 @@ Item {
   }
 
   function runPendingPowerProfile() {
-    powerProfileProcess.command = ["kiku-powerprofiles-set", pendingPowerSource]
+    powerProfileProcess.command = [root.helperDir + "/kiku-powerprofiles-set", pendingPowerSource]
     pendingPowerSource = ""
     powerProfileProcess.running = true
   }

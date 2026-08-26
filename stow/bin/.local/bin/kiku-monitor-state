@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Report brightness and monitor state for the quickshell monitor panel.
+set -euo pipefail
+
+brightness=unavailable
+if command -v brightnessctl >/dev/null 2>&1; then
+  current=$(brightnessctl get 2>/dev/null || true)
+  maximum=$(brightnessctl max 2>/dev/null || true)
+  if [[ ${current:-} =~ ^[0-9]+$ && ${maximum:-} =~ ^[0-9]+$ && $maximum -gt 0 ]]; then
+    brightness=$((current * 100 / maximum))
+  fi
+fi
+
+mapfile -t monitors < <(hyprctl monitors -j 2>/dev/null | jq -c '.[]' 2>/dev/null || true)
+internal=""
+external=""
+focused=""
+enabled_internal=""
+mirror=""
+scale=""
+for monitor in "${monitors[@]}"; do
+  name=$(jq -r '.name // empty' <<<"$monitor")
+  [[ -z $name ]] && continue
+  [[ $(jq -r '.focused // false' <<<"$monitor") == true ]] && focused=$name
+  [[ $name == eDP-* || $name == LVDS-* ]] && internal=$name || external=${external:-$name}
+  [[ $(jq -r '.focused // false' <<<"$monitor") == true ]] && scale=$(jq -r '.scale // empty' <<<"$monitor")
+done
+[[ -n $internal ]] && enabled_internal=$internal
+printf '%s\n%s\n%s\n%s\n%s\n%s\n%s\n' "$brightness" "$internal" "$external" "$enabled_internal" "$mirror" "$focused" "${scale:-1}"
+printf '%s\n' "$(hyprctl monitors -j 2>/dev/null || echo '[]')"

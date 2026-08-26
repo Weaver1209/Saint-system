@@ -39,7 +39,7 @@ BarIndicator {
 
   Process {
     id: jsonProc
-    command: ["omarchy-reminder", "show", "--json"]
+    command: ["bash", "-c", "command -v omarchy-reminder >/dev/null 2>&1 && exec omarchy-reminder show --json || printf '{}\\n'"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: root.update(text)

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+level=${1:-0}
+command -v notify-send >/dev/null 2>&1 && notify-send -u critical "Low battery" "Battery is at ${level}%"

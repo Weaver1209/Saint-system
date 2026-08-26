@@ -5,6 +5,7 @@ set -e
 PACKAGES=(
     sddm
     stow
+    inotify-tools
     hyprpaper
     quickshell
     ghostty

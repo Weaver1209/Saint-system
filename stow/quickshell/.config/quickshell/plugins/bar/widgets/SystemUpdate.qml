@@ -38,7 +38,7 @@ BarWidget {
 
   Process {
     id: updateProc
-    command: ["omarchy-update-available"]
+    command: ["bash", "-c", "command -v omarchy-update-available >/dev/null 2>&1 && exec omarchy-update-available || exit 1"]
     onExited: function(exitCode) {
       root.updateAvailable = exitCode === 0
     }

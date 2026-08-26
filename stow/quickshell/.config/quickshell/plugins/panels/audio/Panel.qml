@@ -12,6 +12,7 @@ Panel {
   id: root
   moduleName: "omarchy.audio"
   ipcTarget: "omarchy.audio"
+  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
 
   readonly property var sink: Pipewire.defaultAudioSink
   readonly property var source: Pipewire.defaultAudioSource
@@ -587,7 +588,7 @@ Panel {
 
   Process {
     id: sinkAvailabilityProc
-    command: ["kiku-audio-sink-availability"]
+    command: ["true"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: root.updateSinkAvailability(text)
@@ -596,7 +597,7 @@ Panel {
 
   Process {
     id: volumeSinkProc
-    command: ["kiku-audio-output-sink"]
+    command: [root.helperDir + "/kiku-audio-output-sink"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: root.volumeSinkName = String(text).trim()

@@ -602,6 +602,9 @@ QtObject {
 
   property Process localPluginWatcher: Process {
     command: [
+      "bash",
+      "-c",
+      "command -v inotifywait >/dev/null 2>&1 || exit 0; exec inotifywait \"$@\"",
       "inotifywait",
       "-m",
       "-r",
@@ -618,7 +621,9 @@ QtObject {
         if (pluginId) registry.localPluginChanged(pluginId)
       }
     }
-    onExited: localPluginWatcherRestart.restart()
+    onExited: function(exitCode) {
+      if (exitCode !== 0) localPluginWatcherRestart.restart()
+    }
   }
 
   property Timer localPluginWatcherRestart: Timer {

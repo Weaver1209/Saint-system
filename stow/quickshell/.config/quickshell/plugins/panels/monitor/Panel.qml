@@ -18,6 +18,7 @@ Panel {
   property int pendingBrightnessPercent: 0
   property bool brightnessSetQueued: false
   property bool brightnessAvailable: false
+  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
   property string internalMonitor: ""
   property string externalMonitor: ""
   property string focusedMonitor: ""
@@ -385,7 +386,7 @@ Panel {
 
   Process {
     id: stateProc
-    command: ["kiku-monitor-state"]
+    command: [root.helperDir + "/kiku-monitor-state"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
