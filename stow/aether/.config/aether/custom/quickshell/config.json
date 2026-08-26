@@ -1,0 +1,4 @@
+{
+    "template": "shell.toml",
+    "destination": "~/.config/omarchy/shell.toml"
+}

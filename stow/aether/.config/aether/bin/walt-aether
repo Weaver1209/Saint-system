@@ -1,0 +1,91 @@
+#!/bin/sh
+# Re-theme desktop from current wallpaper whenever walt changes it.
+# Safe to run repeatedly / concurrently (flock) - idempotent.
+
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/walt-aether.lock"
+flock -w 30 9 || exit 0
+
+# Allow walt process to finish applying wallpaper to hyprpaper
+sleep 0.5
+
+wp=""
+if command -v hyprctl >/dev/null 2>&1; then
+    wp=$(hyprctl hyprpaper listactive 2>/dev/null | head -n 1 | cut -d' ' -f2-)
+fi
+
+if [ -z "$wp" ] || [ ! -f "$wp" ]; then
+    for f in rotation-state.json state.json; do
+        wp=$(jq -r '.last_wallpaper // empty' "$HOME/.config/walt/$f" 2>/dev/null)
+        [ -n "$wp" ] && [ -f "$wp" ] && break
+        wp=$(python3 -c "import json,os; print(json.load(open(os.path.expanduser('~/.config/walt/$f'))).get('last_wallpaper',''))" 2>/dev/null)
+        [ -n "$wp" ] && [ -f "$wp" ] && break
+    done
+fi
+
+[ -n "$wp" ] && [ -f "$wp" ] || exit 0
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/aether"
+mkdir -p "$CACHE_DIR"
+LAST_WP_FILE="$CACHE_DIR/last_applied_wallpaper"
+[ "$1" != "--force" ] && [ "$(cat "$LAST_WP_FILE" 2>/dev/null)" = "$wp" ] && exit 0
+
+echo "$wp" > "$LAST_WP_FILE"
+
+THEME_DIR="$HOME/.config/aether/theme"
+if ! aether --generate "$wp"; then
+    exit 1
+fi
+
+# Live-reload port of omarchy-theme-set: signal running apps after apply.
+killall -USR1 kitty 2>/dev/null
+killall -USR2 ghostty 2>/dev/null
+hyprctl reload >/dev/null 2>&1
+
+# Quickshell bar: push palette via omarchy-derived applyTheme IPC handler
+qs ipc call shell applyTheme \
+    "$(base64 -w0 "$THEME_DIR/colors.toml")" \
+    "$(base64 -w0 "$THEME_DIR/quickshell-shell.toml")" >/dev/null 2>&1
+
+# Apply theme to Google Chrome and Brave-Origin
+if [ -x "$HOME/.config/aether/bin/theme-chromium" ]; then
+    "$HOME/.config/aether/bin/theme-chromium" >/dev/null 2>&1 || true
+fi
+
+# GTK 3 & GTK 4 apps (Nautilus, etc.) re-read ~/.config/gtk-4.0/gtk.css dynamically
+# Sync GNOME / Libadwaita accent color enum
+if command -v gsettings >/dev/null 2>&1 && [ -f "$THEME_DIR/colors.toml" ]; then
+    gnome_acc=$(python3 -c "
+import colorsys, tomllib
+with open('$THEME_DIR/colors.toml', 'rb') as f: colors = tomllib.load(f)
+c = colors.get('accent', '#3584e4').lstrip('#')
+r, g, b = int(c[0:2],16)/255.0, int(c[2:4],16)/255.0, int(c[4:6],16)/255.0
+h, l, s = colorsys.rgb_to_hls(r, g, b)
+hue = h * 360
+if s < 0.15: a = 'slate'
+elif hue >= 345 or hue < 15: a = 'red'
+elif 15 <= hue < 45: a = 'orange'
+elif 45 <= hue < 75: a = 'yellow'
+elif 75 <= hue < 165: a = 'green'
+elif 165 <= hue < 200: a = 'teal'
+elif 200 <= hue < 260: a = 'blue'
+elif 260 <= hue < 315: a = 'purple'
+else: a = 'pink'
+print(a)
+" 2>/dev/null)
+    [ -n "$gnome_acc" ] && gsettings set org.gnome.desktop.interface accent-color "$gnome_acc" 2>/dev/null || true
+fi
+
+# Sync GNOME / GTK folder icon theme from Aether (Yaru color variants)
+if [ -f "$THEME_DIR/icons.theme" ]; then
+    icon_theme=$(tr -d '[:space:]' < "$THEME_DIR/icons.theme")
+    if [ -n "$icon_theme" ]; then
+        if command -v gsettings >/dev/null 2>&1; then
+            gsettings set org.gnome.desktop.interface icon-theme "$icon_theme" 2>/dev/null || true
+        fi
+        for ini in "$HOME/.config/gtk-3.0/settings.ini" "$HOME/.config/gtk-4.0/settings.ini"; do
+            if [ -f "$ini" ]; then
+                sed -i -E "s/^([[:space:]]*gtk-icon-theme-name[[:space:]]*=[[:space:]]*).*/\1$icon_theme/" "$ini" 2>/dev/null || true
+            fi
+        done
+    fi
+fi

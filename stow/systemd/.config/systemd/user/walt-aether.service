@@ -1,0 +1,10 @@
+[Unit]
+Description=Auto-generate Aether theme on wallpaper change
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/aether/bin/walt-aether
+
+[Install]
+WantedBy=default.target

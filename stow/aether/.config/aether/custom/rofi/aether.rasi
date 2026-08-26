@@ -1,0 +1,28 @@
+* {
+  base: {background};
+  mantle: {dark_bg};
+  crust: {darker_bg};
+  text: {foreground};
+  subtext1: {light_fg};
+  subtext0: {foreground};
+  overlay2: {bright_fg};
+  overlay1: {bright_black};
+  overlay0: {bright_black};
+  surface2: {bright_black};
+  surface1: {black};
+  surface0: {dark_bg};
+  rosewater: {bright_red};
+  flamingo: {bright_red};
+  pink: {bright_magenta};
+  mauve: {magenta};
+  red: {red};
+  maroon: {bright_red};
+  peach: {bright_yellow};
+  yellow: {yellow};
+  green: {green};
+  teal: {cyan};
+  sky: {bright_cyan};
+  sapphire: {bright_blue};
+  blue: {blue};
+  lavender: {bright_blue};
+}

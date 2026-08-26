@@ -1,0 +1,11 @@
+[Unit]
+Description=Watch Walt wallpaper changes
+
+[Path]
+PathModified=%h/.config/walt/state.json
+PathModified=%h/.config/walt/rotation-state.json
+PathModified=%h/.cache/walt/logs/walt.log
+Unit=walt-aether.service
+
+[Install]
+WantedBy=default.target

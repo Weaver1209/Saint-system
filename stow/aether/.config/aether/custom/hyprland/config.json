@@ -1,0 +1,4 @@
+{
+    "template": "theme.lua",
+    "destination": "~/.config/hypr/theme.lua"
+}

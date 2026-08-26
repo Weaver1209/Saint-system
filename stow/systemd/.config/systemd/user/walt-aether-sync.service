@@ -1,0 +1,6 @@
+[Unit]
+Description=Sync Aether theme to active wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/aether/bin/walt-aether

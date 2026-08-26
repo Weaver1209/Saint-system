@@ -1,0 +1,9 @@
+[Unit]
+Description=Periodic wallpaper/theme sync check
+
+[Timer]
+OnBootSec=15s
+OnUnitActiveSec=10s
+
+[Install]
+WantedBy=timers.target

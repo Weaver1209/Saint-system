@@ -1,0 +1,4 @@
+{
+    "template": "userChrome.css",
+    "destination": "~/.mozilla/firefox/6smikaak.default-release/chrome/userChrome.css"
+}

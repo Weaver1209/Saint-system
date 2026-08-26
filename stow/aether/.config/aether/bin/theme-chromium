@@ -1,0 +1,277 @@
+#!/usr/bin/env python3
+"""
+theme-chromium: Apply Aether dynamic theme colors to Google Chrome & Brave-Origin.
+Updates Preferences JSON and flags configuration files atomically.
+"""
+
+import os
+import sys
+import json
+import glob
+import struct
+import tomllib
+from pathlib import Path
+
+AETHER_THEME_DIR = Path.home() / ".config" / "aether" / "theme"
+CUSTOM_JSON_FILE = AETHER_THEME_DIR / "chromium-custom.json"
+CHROMIUM_THEME_FILE = AETHER_THEME_DIR / "chromium.theme"
+COLORS_TOML_FILE = AETHER_THEME_DIR / "colors.toml"
+
+CHROME_CONFIG_DIR = Path.home() / ".config" / "google-chrome"
+BRAVE_ORIGIN_CONFIG_DIR = Path.home() / ".config" / "BraveSoftware" / "Brave-Origin"
+BRAVE_BROWSER_CONFIG_DIR = Path.home() / ".config" / "BraveSoftware" / "Brave-Browser"
+CHROMIUM_CONFIG_DIR = Path.home() / ".config" / "chromium"
+
+CHROME_FLAGS_FILE = Path.home() / ".config" / "chrome-flags.conf"
+BRAVE_FLAGS_FILE = Path.home() / ".config" / "brave-origin-flags.conf"
+
+
+def hex_to_rgb(hex_str: str) -> tuple[int, int, int]:
+    hex_str = hex_str.lstrip("#").strip()
+    if len(hex_str) == 3:
+        hex_str = "".join([c * 2 for c in hex_str])
+    elif len(hex_str) == 8:
+        hex_str = hex_str[2:]  # ignore alpha if prefix
+    r = int(hex_str[0:2], 16)
+    g = int(hex_str[2:4], 16)
+    b = int(hex_str[4:6], 16)
+    return r, g, b
+
+
+def rgb_to_hex(r: int, g: int, b: int) -> str:
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def rgb_to_signed_int32(r: int, g: int, b: int, a: int = 255) -> int:
+    argb = ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF)
+    return struct.unpack("i", struct.pack("I", argb))[0]
+
+
+def get_color_and_mode() -> tuple[int, int, int, str]:
+    mode = "dark"
+    r, g, b = 112, 128, 164
+
+    # 1. CLI argument (file path, hex, or rgb)
+    if len(sys.argv) > 1:
+        arg = sys.argv[1].strip()
+        if arg.endswith(".json") and Path(arg).exists():
+            try:
+                with open(arg, "r", encoding="utf-8") as f:
+                    cdata = json.load(f)
+                if "accent" in cdata:
+                    r, g, b = hex_to_rgb(cdata["accent"])
+                if "mode" in cdata:
+                    mode = cdata["mode"]
+                return r, g, b, mode
+            except Exception as e:
+                print(f"[theme-chromium] Warning reading arg json {arg}: {e}", file=sys.stderr)
+        elif arg.startswith("#"):
+            r, g, b = hex_to_rgb(arg)
+            return r, g, b, mode
+        elif "," in arg:
+            parts = [int(p.strip()) for p in arg.split(",") if p.strip()]
+            if len(parts) >= 3:
+                r, g, b = parts[0], parts[1], parts[2]
+                return r, g, b, mode
+
+    # 2. Try reading chromium-custom.json
+    if CUSTOM_JSON_FILE.exists():
+        try:
+            with open(CUSTOM_JSON_FILE, "r", encoding="utf-8") as f:
+                cdata = json.load(f)
+            if "accent" in cdata and cdata["accent"].startswith("#"):
+                r, g, b = hex_to_rgb(cdata["accent"])
+            if "mode" in cdata:
+                mode = cdata["mode"]
+            return r, g, b, mode
+        except Exception as e:
+            print(f"[theme-chromium] Warning reading {CUSTOM_JSON_FILE}: {e}", file=sys.stderr)
+
+    # 3. Try reading colors.toml
+    if COLORS_TOML_FILE.exists():
+        try:
+            with open(COLORS_TOML_FILE, "rb") as f:
+                data = tomllib.load(f)
+            mode = data.get("mode", "dark")
+            accent = data.get("accent")
+            if accent:
+                r, g, b = hex_to_rgb(accent)
+        except Exception as e:
+            print(f"[theme-chromium] Warning reading colors.toml: {e}", file=sys.stderr)
+
+    # 4. Try reading chromium.theme (RGB format: r,g,b)
+    if CHROMIUM_THEME_FILE.exists():
+        try:
+            content = CHROMIUM_THEME_FILE.read_text().strip()
+            if content:
+                parts = [int(p.strip()) for p in content.split(",") if p.strip()]
+                if len(parts) >= 3:
+                    r, g, b = parts[0], parts[1], parts[2]
+        except Exception as e:
+            print(f"[theme-chromium] Warning reading chromium.theme: {e}", file=sys.stderr)
+
+    return r, g, b, mode
+
+
+def update_preferences_file(pref_path: Path, color_int32: int, mode: str) -> bool:
+    pref_path = pref_path.resolve()
+    if not pref_path.parent.exists():
+        return False
+
+    pref_data = {}
+    if pref_path.exists():
+        try:
+            with open(pref_path, "r", encoding="utf-8") as f:
+                pref_data = json.load(f)
+        except Exception as e:
+            print(f"[theme-chromium] Warning: Could not parse {pref_path}: {e}", file=sys.stderr)
+            backup_path = pref_path.with_suffix(".json.bak")
+            try:
+                if pref_path.exists():
+                    pref_path.rename(backup_path)
+            except Exception:
+                pass
+            pref_data = {}
+
+    is_dark = (mode.lower() == "dark")
+    theme_color_scheme = 1 if is_dark else 0
+    browser_color_scheme = 2 if is_dark else 1
+
+    # Ensure structures exist
+    if "autogenerated" not in pref_data or not isinstance(pref_data["autogenerated"], dict):
+        pref_data["autogenerated"] = {}
+    if "theme" not in pref_data["autogenerated"] or not isinstance(pref_data["autogenerated"]["theme"], dict):
+        pref_data["autogenerated"]["theme"] = {}
+    pref_data["autogenerated"]["theme"]["color"] = color_int32
+
+    if "extensions" not in pref_data or not isinstance(pref_data["extensions"], dict):
+        pref_data["extensions"] = {}
+    if "theme" not in pref_data["extensions"] or not isinstance(pref_data["extensions"]["theme"], dict):
+        pref_data["extensions"]["theme"] = {}
+    pref_data["extensions"]["theme"]["id"] = "autogenerated_theme_id"
+    pref_data["extensions"]["theme"]["use_system"] = False
+    pref_data["extensions"]["theme"]["system_theme"] = 0
+
+    if "theme" not in pref_data or not isinstance(pref_data["theme"], dict):
+        pref_data["theme"] = {}
+    pref_data["theme"]["color_scheme"] = theme_color_scheme
+    pref_data["theme"]["user_color"] = color_int32
+
+    if "browser" not in pref_data or not isinstance(pref_data["browser"], dict):
+        pref_data["browser"] = {}
+    if "theme" not in pref_data["browser"] or not isinstance(pref_data["browser"]["theme"], dict):
+        pref_data["browser"]["theme"] = {}
+    pref_data["browser"]["theme"]["color_scheme"] = browser_color_scheme
+    pref_data["browser"]["theme"]["user_color"] = color_int32
+    pref_data["browser"]["theme"]["color_variant"] = 5
+
+    # Atomic write
+    tmp_path = pref_path.with_name(f"{pref_path.name}.tmp.{os.getpid()}")
+    try:
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(pref_data, f, indent=2, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+        os.chmod(tmp_path, 0o600)
+        os.replace(tmp_path, pref_path)
+        print(f"[theme-chromium] Successfully updated {pref_path}")
+        return True
+    except Exception as e:
+        print(f"[theme-chromium] Error updating {pref_path}: {e}", file=sys.stderr)
+        if tmp_path.exists():
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
+        return False
+
+
+def update_flags_file(flags_file: Path, hex_color: str) -> bool:
+    flags_file.parent.mkdir(parents=True, exist_ok=True)
+    existing_lines = []
+    if flags_file.exists():
+        try:
+            with open(flags_file, "r", encoding="utf-8") as f:
+                existing_lines = f.readlines()
+        except Exception as e:
+            print(f"[theme-chromium] Warning reading {flags_file}: {e}", file=sys.stderr)
+
+    theme_flag = f"--install-autogenerated-theme={hex_color}"
+    new_lines = []
+    for line in existing_lines:
+        stripped = line.strip()
+        if stripped.startswith("--install-autogenerated-theme="):
+            continue
+        new_lines.append(line)
+
+    if new_lines and not new_lines[-1].endswith("\n"):
+        new_lines[-1] += "\n"
+
+    new_lines.append(f"{theme_flag}\n")
+
+    tmp_file = flags_file.with_name(f"{flags_file.name}.tmp.{os.getpid()}")
+    try:
+        with open(tmp_file, "w", encoding="utf-8") as f:
+            f.writelines(new_lines)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_file, flags_file)
+        print(f"[theme-chromium] Successfully updated {flags_file} -> {theme_flag}")
+        return True
+    except Exception as e:
+        print(f"[theme-chromium] Error updating {flags_file}: {e}", file=sys.stderr)
+        if tmp_file.exists():
+            try:
+                tmp_file.unlink()
+            except Exception:
+                pass
+        return False
+
+
+def main():
+    r, g, b, mode = get_color_and_mode()
+    hex_color = rgb_to_hex(r, g, b)
+    int32_color = rgb_to_signed_int32(r, g, b)
+
+    print(f"[theme-chromium] Theming Chromium browsers: RGB=({r},{g},{b}) Hex={hex_color} Int32={int32_color} Mode={mode}")
+
+    # 1. Update flags files for google-chrome and brave-origin
+    update_flags_file(CHROME_FLAGS_FILE, hex_color)
+    update_flags_file(BRAVE_FLAGS_FILE, hex_color)
+
+    # 2. Find and update all Chromium / Chrome / Brave profile Preferences
+    config_dirs = [
+        CHROME_CONFIG_DIR,
+        BRAVE_ORIGIN_CONFIG_DIR,
+        BRAVE_BROWSER_CONFIG_DIR,
+        CHROMIUM_CONFIG_DIR,
+    ]
+
+    updated_count = 0
+    for base_dir in config_dirs:
+        if not base_dir.exists():
+            continue
+
+        # Check Default profile
+        default_pref = base_dir / "Default" / "Preferences"
+        if default_pref.parent.exists():
+            if update_preferences_file(default_pref, int32_color, mode):
+                updated_count += 1
+
+        # Check any Profile * directories
+        for profile_dir in base_dir.glob("Profile *"):
+            if profile_dir.is_dir():
+                pref = profile_dir / "Preferences"
+                if update_preferences_file(pref, int32_color, mode):
+                    updated_count += 1
+
+        # Check System Profile if exists
+        sys_pref = base_dir / "System Profile" / "Preferences"
+        if sys_pref.exists():
+            update_preferences_file(sys_pref, int32_color, mode)
+
+    print(f"[theme-chromium] Completed. Updated {updated_count} profile Preferences files.")
+
+
+if __name__ == "__main__":
+    main()

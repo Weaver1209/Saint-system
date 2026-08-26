@@ -1,28 +1,34 @@
-#Secrets
+# Secrets & Credentials
 .env
 .env.*
-*.secret 
+*.secret
+credentials*
+secrets*
 
-
-#SSH
+# SSH & GPG
 .ssh/
-
-# GPG 
 .gnupg/
 
-# Local Machine State 
-
+# Local Machine State & Caches
 .local-state/
+.cache/
+*.log
 
-# Editor/OS junk
-
+# Backups & Editor Junk
+*.bak
+*.backup
 *.swp
 *.swo
 *~
 .DS_Store
 
-# Credentials
+# Python Bytecode
+__pycache__/
+*.pyc
+*.pyo
 
-credentials*
-secrets*
-
+# Dynamic Theme / Generated Runtime Assets
+stow/aether/.config/aether/theme/
+stow/aether/.config/aether/blueprints/
+.config/aether/theme/
+.config/aether/blueprints/

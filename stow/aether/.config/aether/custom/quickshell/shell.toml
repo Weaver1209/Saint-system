@@ -1,0 +1,96 @@
+[bar]
+background = "{background}"
+text = "{foreground}"
+active = "{accent}"
+size-horizontal = 30
+size-vertical = 30
+
+[popups]
+background = "{dark_bg}"
+text = "{foreground}"
+border = "{muted}"
+
+[tooltip]
+background = "{darker_bg}"
+text = "{foreground}"
+border = "{muted}"
+
+[notifications]
+background = "{dark_bg}"
+text = "{foreground}"
+border = "{accent}"
+countdown = "{accent}"
+
+[menu]
+background = "{dark_bg}"
+text = "{foreground}"
+border = "{muted}"
+selected-background = "{muted}"
+selected-text = "{accent}"
+
+[controls]
+normal-color = "{muted}"
+normal-fill-alpha = 0.08
+normal-border = "{muted}"
+normal-border-alpha = 0.2
+hover-cursor-color = "{accent}"
+hover-cursor-fill-alpha = 0.15
+hover-cursor-border = "{accent}"
+hover-cursor-border-alpha = 0.3
+focus-color = "{accent}"
+focus-fill-alpha = 0.2
+focus-border = "{accent}"
+focus-border-alpha = 0.5
+selected-color = "{accent}"
+selected-fill-alpha = 0.25
+selected-border = "{accent}"
+selected-border-alpha = 0.6
+
+[font]
+base-size = 12
+
+[polkit]
+background = "{dark_bg}"
+text = "{foreground}"
+text-error = "{red}"
+border = "{accent}"
+border-error = "{red}"
+border-alpha = 0.4
+accent = "{accent}"
+scrim = "{background}"
+scrim-alpha = 0.7
+
+[lock]
+background = "{dark_bg}"
+text = "{foreground}"
+placeholder = "{muted}"
+text-error = "{red}"
+border = "{muted}"
+border-active = "{accent}"
+border-error = "{red}"
+border-alpha = 0.5
+selection = "{accent}"
+selection-alpha = 0.3
+
+[image-picker]
+scrim = "{background}"
+scrim-alpha = 0.8
+text = "{foreground}"
+selected-border = "{accent}"
+selected-border-alpha = 0.8
+unselected-border = "{muted}"
+unselected-border-alpha = 0.3
+
+[launcher]
+background = "{dark_bg}"
+background-alpha = 0.9
+text = "{foreground}"
+border = "{muted}"
+border-alpha = 0.3
+scrim = "{background}"
+scrim-alpha = 0.8
+selected-background = "{accent}"
+selected-background-alpha = 0.2
+selected-text = "{accent}"
+selected-border = "{accent}"
+selected-border-alpha = 0.5

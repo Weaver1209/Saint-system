@@ -1,0 +1,67 @@
+/* Aether-generated Firefox theme */
+:root {
+    --toolbar-bgcolor: {darker_bg} !important;
+    --toolbar-color: {foreground} !important;
+    --toolbar-field-background-color: {dark_bg} !important;
+    --toolbar-field-color: {foreground} !important;
+    --toolbar-field-focus-background-color: {background} !important;
+    --toolbar-field-focus-border-color: {accent} !important;
+    --tab-selected-bgcolor: {background} !important;
+    --tab-selected-textcolor: {foreground} !important;
+    --tab-loading-fill: {accent} !important;
+    --lwt-accent-color: {darker_bg} !important;
+    --lwt-text-color: {foreground} !important;
+    --arrowpanel-background: {dark_bg} !important;
+    --arrowpanel-color: {foreground} !important;
+    --arrowpanel-border-color: {muted} !important;
+    --sidebar-background-color: {darker_bg} !important;
+    --sidebar-text-color: {foreground} !important;
+    --urlbar-box-bgcolor: {dark_bg} !important;
+    --urlbar-box-text-color: {foreground} !important;
+    --urlbar-box-focus-bgcolor: {background} !important;
+    --autocomplete-popup-background: {dark_bg} !important;
+    --autocomplete-popup-highlight-background: {lighter_bg} !important;
+    --autocomplete-popup-highlight-color: {accent} !important;
+}
+
+/* Tab bar background */
+#TabsToolbar {
+    background-color: {darker_bg} !important;
+}
+
+/* Active tab */
+.tab-background[selected] {
+    background-color: {background} !important;
+}
+
+/* Inactive tabs */
+.tab-background:not([selected]) {
+    background-color: {darker_bg} !important;
+}
+
+/* Navigation toolbar */
+#nav-bar {
+    background-color: {darker_bg} !important;
+    border-bottom: 1px solid {muted} !important;
+}
+
+/* URL bar */
+#urlbar-background {
+    background-color: {dark_bg} !important;
+    border: 1px solid {muted} !important;
+}
+
+#urlbar-background:focus-within,
+#urlbar[focused] #urlbar-background {
+    border-color: {accent} !important;
+}
+
+/* Sidebar */
+#sidebar-box {
+    background-color: {darker_bg} !important;
+}
+
+/* Bookmark bar */
+#PersonalToolbar {
+    background-color: {darker_bg} !important;
+}

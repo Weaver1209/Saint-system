@@ -1,0 +1,250 @@
+/* Aether GTK 3 Theme */
+
+@define-color theme_bg_color {background};
+@define-color theme_fg_color {foreground};
+@define-color theme_base_color {background};
+@define-color theme_text_color {foreground};
+@define-color theme_selected_bg_color {selection};
+@define-color theme_selected_fg_color {accent};
+@define-color theme_unfocused_selected_bg_color {lighter_bg};
+@define-color theme_unfocused_selected_fg_color {muted};
+
+@define-color placeholder_text_color {muted};
+@define-color content_view_bg {background};
+
+@define-color wm_bg {background};
+@define-color wm_border_focused {accent};
+@define-color wm_border_unfocused {muted};
+
+@define-color borders {muted};
+@define-color headerbar_bg_color {darker_bg};
+@define-color headerbar_fg_color {foreground};
+
+/* Base Window, Dialog & Container Styling */
+window, dialog, .background, .view, view, viewport, stack, .content-view, scrolledwindow, list, listbox, row, listrow, listboxrow, GtkListBox, GtkListBoxRow {
+    background-color: {background};
+    color: {foreground};
+}
+
+headerbar, actionbar, toolbar {
+    background-color: {darker_bg};
+    color: {foreground};
+    border-bottom: 1px solid {muted};
+}
+
+headerbar .title, headerbar .subtitle {
+    color: {foreground};
+}
+
+/* Sidebar & Navigation */
+.sidebar, placessidebar, stacksidebar {
+    background-color: {darker_bg};
+    color: {foreground};
+}
+
+.sidebar row, placessidebar row {
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: {foreground};
+}
+
+.sidebar row:hover, placessidebar row:hover {
+    background-color: {lighter_bg};
+    color: {foreground};
+}
+
+.sidebar row:selected, placessidebar row:selected {
+    background-color: {selection};
+    color: {accent};
+    font-weight: bold;
+}
+
+/* File Chooser & TreeView / List Views */
+filechooser, GtkFileChooserDialog, GtkFileChooserWidget {
+    background-color: {background};
+    color: {foreground};
+}
+
+treeview.view, GtkTreeView, treeview {
+    background-color: {background};
+    color: {foreground};
+    border: none;
+}
+
+treeview.view cell, treeview.view row, GtkTreeView cell {
+    color: {foreground};
+}
+
+treeview.view:hover {
+    background-color: {lighter_bg};
+}
+
+treeview.view:selected, treeview.view:selected:focus {
+    background-color: {selection};
+    color: {accent};
+}
+
+treeview.view header button {
+    background-color: {darker_bg};
+    color: {muted};
+    border: none;
+    padding: 4px 8px;
+}
+
+treeview.view header button:hover {
+    background-color: {lighter_bg};
+    color: {foreground};
+}
+
+/* Path bar (Breadcrumbs at top of File Picker) */
+pathbar, .path-bar, GtkPathBar {
+    background-color: transparent;
+}
+
+.path-bar button, pathbar button, GtkPathBar button {
+    background-color: {lighter_bg};
+    color: {foreground};
+    border: 1px solid {muted};
+    border-radius: 6px;
+    padding: 4px 8px;
+    margin: 0 2px;
+}
+
+.path-bar button:hover, pathbar button:hover, GtkPathBar button:hover {
+    background-color: {selection};
+    color: {accent};
+}
+
+.path-bar button:checked, .path-bar button:active, pathbar button:checked, GtkPathBar button:checked {
+    background-color: {selection};
+    color: {accent};
+    font-weight: bold;
+}
+
+/* Text Entries & Search Bars */
+entry, searchbar entry, .search-bar entry {
+    background-color: {dark_bg};
+    color: {foreground};
+    border: 1px solid {muted};
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+
+entry:focus, searchbar entry:focus {
+    border-color: {accent};
+    background-color: {dark_bg};
+}
+
+/* General Buttons */
+button {
+    background-color: {lighter_bg};
+    color: {foreground};
+    border: 1px solid {muted};
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+button:hover {
+    background-color: {selection};
+    color: {foreground};
+}
+
+button:active, button:checked {
+    background-color: {selection};
+    color: {accent};
+}
+
+button.suggested-action {
+    background-color: {accent};
+    color: {background};
+    border: none;
+    font-weight: bold;
+}
+
+button.suggested-action:hover {
+    background-color: {bright_blue};
+    color: {background};
+}
+
+button.destructive-action {
+    background-color: {red};
+    color: {background};
+    border: none;
+    font-weight: bold;
+}
+
+button.destructive-action:hover {
+    background-color: {bright_red};
+    color: {background};
+}
+
+button.flat {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+button.flat:hover {
+    background-color: {lighter_bg};
+}
+
+/* Combobox & Dropdowns */
+combobox, combobox button, combobox cell, combobox entry, dropdown button {
+    background-color: {lighter_bg};
+    color: {foreground};
+    border: 1px solid {muted};
+    border-radius: 6px;
+}
+
+combobox menu, combobox popover, combobox list, combobox window {
+    background-color: {dark_bg};
+    color: {foreground};
+}
+popover, menu, .menu {
+    background-color: {dark_bg};
+    color: {foreground};
+    border: 1px solid {muted};
+    border-radius: 8px;
+    padding: 4px;
+}
+
+popover modelbutton, menuitem {
+    min-height: 24px;
+    padding: 4px 8px;
+    margin: 1px 0;
+    border-radius: 4px;
+    color: {foreground};
+}
+
+popover modelbutton:hover, menuitem:hover {
+    background-color: {lighter_bg};
+    color: {accent};
+}
+
+/* Scrollbars */
+scrollbar {
+    background-color: transparent;
+}
+
+scrollbar slider {
+    background-color: {muted};
+    border-radius: 4px;
+    min-width: 6px;
+    min-height: 6px;
+}
+
+scrollbar slider:hover {
+    background-color: {lighter_bg};
+}
+
+scrollbar slider:active {
+    background-color: {accent};
+}
+
+/* Labels & Status */
+label {
+    color: {foreground};
+}
+
+label:disabled {
+    color: {muted};
+}

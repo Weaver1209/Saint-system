@@ -1,0 +1,4 @@
+{
+    "template": "theme.json",
+    "destination": "~/.config/aether/theme/chromium-custom.json"
+}
