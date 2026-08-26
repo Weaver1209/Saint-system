@@ -642,20 +642,16 @@ Panel {
   }
 
   function setDns(provider) {
-    if (!provider || actionProc.running) return
+    if (!provider) return
 
-    if (provider === "Custom") {
-      var launcher = "ghostty -e " + root.helperDir + "/kiku-dns Custom"
-      if (root.bar) {
-        root.bar.run(launcher)
-      }
-      root.close()
-      return
-    }
+    var profiles = { DHCP: "default", Cloudflare: "cloudflare", Quad9: "quad9", AdGuard: "adguard", Mullvad: "mullvad" }
+    var profile = profiles[provider]
+    if (!profile) return
 
-    root.pendingDnsProvider = provider
-    actionProc.command = [root.helperDir + "/kiku-dns", provider]
-    actionProc.running = true
+    // Detached execution survives the popup closing; the old shared Process was
+    // raced by controller.hide(), so clicks appeared to do nothing.
+    Quickshell.execDetached([root.helperDir + "/kiku-dns", "set", profile])
+    root.dnsProvider = provider
     root.close()
   }
 
