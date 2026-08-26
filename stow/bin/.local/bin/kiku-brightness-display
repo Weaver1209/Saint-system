@@ -11,4 +11,7 @@ while (($#)); do
   esac
 done
 if [[ -z $value ]]; then brightnessctl -m | awk -F, 'NR==1 {gsub(/%/,"",$4); print $4; exit}'; exit 0; fi
-brightnessctl -q -e4 -n2 set "$value"
+percent=${value%%%}
+[[ $percent =~ ^[0-9]+$ ]] || { echo "invalid brightness: $value" >&2; exit 2; }
+max=$(brightnessctl max)
+brightnessctl -q -e4 -n2 set "$((max * percent / 100))"

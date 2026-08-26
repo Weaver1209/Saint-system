@@ -592,7 +592,10 @@ Panel {
 
   function updateDns(raw) {
     var value = String(raw || "").trim()
-    dnsProvider = value || "DHCP"
+    var match = value.match(/Current Profile:\s*(\S+)/)
+    if (match) value = match[1]
+    var labels = { default: "DHCP", dhcp: "DHCP", quad9: "Quad9", adguard: "AdGuard", cloudflare: "Cloudflare", mullvad: "Mullvad" }
+    dnsProvider = labels[value.toLowerCase()] || value || "DHCP"
   }
 
   function updateBand(raw) {
