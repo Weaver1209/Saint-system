@@ -2,4 +2,6 @@ configuration {
     show-icons: true;
 }
 
-@theme "catppuccin-mocha"
+@theme "aether"
+@import "themes/aether"
+@import "catppuccin-default"

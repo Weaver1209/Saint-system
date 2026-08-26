@@ -61,8 +61,8 @@ BarWidget {
         bar: root.bar
         text: modelData === 10 ? "0" : String(modelData)
         active: focused
-        foreground: focused ? "#11111b" : (occupied ? "#cdd6f4" : "#6c7086")
-        activeColor: "#cba6f7"
+        foreground: focused ? Color.bar.background : (occupied ? Color.bar.text : Color.bar.muted)
+        activeColor: Color.bar.active
         useActiveColor: true
         opacity: occupied || focused ? 1.0 : 0.55
         horizontalMargin: 6

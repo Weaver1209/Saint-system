@@ -1,0 +1,8 @@
+# theme = Catppuccin Mocha
+config-file = /home/weaver/.config/aether/theme/ghostty.conf
+font-family = "JetBrainsMono Nerd Font"
+font-size = 12
+window-padding-x = 10
+window-padding-y = 10
+env = LANG=en_US.UTF-8
+env = LC_ALL=en_US.UTF-8

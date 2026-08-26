@@ -143,7 +143,7 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
-    foreground: "#fab387"
+    foreground: Color.bar.active
     text: root.vertical ? "" : root.displayText
     labelVisible: !root.vertical
     hasVisualContent: root.vertical ? root.verticalLines.length > 0 : text !== ""

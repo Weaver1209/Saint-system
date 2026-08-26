@@ -4,5 +4,3 @@ require("monitors")
 require("rules")
 require("keybinds")
 require("startup")
-
-pcall(require, "theme")

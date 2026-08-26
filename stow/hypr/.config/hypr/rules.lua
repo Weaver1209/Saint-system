@@ -26,3 +26,12 @@ hl.window_rule({
     size   = "900 600",
     center = true,
 })
+
+-- Float Proton VPN terminal
+hl.window_rule({
+    name   = "float-protonvpn",
+    match  = { title = "^Proton VPN.*" },
+    float  = true,
+    size   = "650 420",
+    center = true,
+})
