@@ -18,30 +18,29 @@ for arg in "$@"; do
     fi
 done
 
-# 1. Check hyprpaper.conf
+# 1. Primary: Live active wallpaper from hyprpaper via hyprctl
+if [ -z "$wp" ] || [ ! -f "$wp" ]; then
+    if command -v hyprctl >/dev/null 2>&1; then
+        hl_wp=$(hyprctl hyprpaper listactive 2>/dev/null | head -n 1 | sed 's/^[^:]*:[[:space:]]*//')
+        [ -n "$hl_wp" ] && [ -f "$hl_wp" ] && wp="$hl_wp"
+    fi
+fi
+
+# 2. Secondary: Walt rotation state files
+if [ -z "$wp" ] || [ ! -f "$wp" ]; then
+    for f in rotation-state.json state.json; do
+        [ -f "$HOME/.config/walt/$f" ] || continue
+        wp=$(jq -r '.last_wallpaper // empty' "$HOME/.config/walt/$f" 2>/dev/null)
+        [ -n "$wp" ] && [ -f "$wp" ] && break
+    done
+fi
+
+# 3. Tertiary: hyprpaper.conf
 if [ -z "$wp" ] || [ ! -f "$wp" ]; then
     if [ -f "$HOME/.config/hyprpaper/hyprpaper.conf" ]; then
         hp_wp=$(grep -E '^[[:space:]]*path[[:space:]]*=' "$HOME/.config/hyprpaper/hyprpaper.conf" 2>/dev/null | tail -n 1 | cut -d'=' -f2- | tr -d ' "')
         [ -n "$hp_wp" ] && [ -f "$hp_wp" ] && wp="$hp_wp"
     fi
-fi
-
-# 2. Check hyprctl hyprpaper listactive
-if [ -z "$wp" ] || [ ! -f "$wp" ]; then
-    if command -v hyprctl >/dev/null 2>&1; then
-        hl_wp=$(hyprctl hyprpaper listactive 2>/dev/null | head -n 1 | cut -d' ' -f2-)
-        [ -n "$hl_wp" ] && [ -f "$hl_wp" ] && wp="$hl_wp"
-    fi
-fi
-
-# 3. Check walt state files
-if [ -z "$wp" ] || [ ! -f "$wp" ]; then
-    for f in rotation-state.json state.json; do
-        wp=$(jq -r '.last_wallpaper // empty' "$HOME/.config/walt/$f" 2>/dev/null)
-        [ -n "$wp" ] && [ -f "$wp" ] && break
-        wp=$(python3 -c "import json,os; print(json.load(open(os.path.expanduser('~/.config/walt/$f'))).get('last_wallpaper',''))" 2>/dev/null)
-        [ -n "$wp" ] && [ -f "$wp" ] && break
-    done
 fi
 
 [ -n "$wp" ] && [ -f "$wp" ] || exit 0
