@@ -20,6 +20,7 @@ Item {
 
   property bool opened: false
   property string connectionName: ""
+  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
 
   property bool running: false
   property bool expectedStop: false
@@ -99,7 +100,7 @@ Item {
     expectedStop = false
     phase = nextPhase
     stderrText = ""
-    speedTestProc.command = ["kiku-network-speedtest", nextPhase]
+    speedTestProc.command = [root.helperDir + "/kiku-network-speedtest", nextPhase]
     speedTestProc.running = true
     phaseTimer.restart()
   }
@@ -171,7 +172,7 @@ Item {
   // field is the kind, second the SSID (wifi) or device (ethernet).
   Process {
     id: statusProc
-    command: ["kiku-network-status"]
+    command: [root.helperDir + "/kiku-network-status"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+phase=${1:-}
+case $phase in
+  down) curl -fsSL --max-time 5 -o /dev/null -w '%{speed_download}\n' 'https://speed.cloudflare.com/__down?bytes=10000000' | awk '{printf "%.2f\n", $1*8/1000000}' ;;
+  up) dd if=/dev/zero bs=1M count=2 2>/dev/null | curl -fsS --max-time 5 -X POST --data-binary @- -o /dev/null -w '%{speed_upload}\n' 'https://speed.cloudflare.com/__up' | awk '{printf "%.2f\n", $1*8/1000000}' ;;
+  *) echo 'usage: kiku-network-speedtest down|up' >&2; exit 2;;
+esac

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+size=${1:-}
+[[ $size =~ ^[0-9]+$ && $size -ge 9 && $size -le 20 ]] || { echo 'usage: omarchy-display-text-size 9..20' >&2; exit 2; }
+file=${OMARCHY_SHELL_CONFIG:-$HOME/.config/omarchy/shell.toml}
+mkdir -p "$(dirname "$file")"
+if [[ -f $file ]] && grep -q '^base-size[[:space:]]*=' "$file"; then
+  sed -i -E "s/^base-size[[:space:]]*=.*/base-size = $size/" "$file"
+else
+  printf '\n[font]\nbase-size = %s\n' "$size" >>"$file"
+fi

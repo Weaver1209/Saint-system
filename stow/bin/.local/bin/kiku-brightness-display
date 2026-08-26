@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+no_osd=false
+monitor=""
+value=""
+while (($#)); do
+  case $1 in
+    --no-osd) no_osd=true; shift;;
+    --monitor) monitor=${2:-}; shift 2;;
+    *) value=$1; shift;;
+  esac
+done
+if [[ -z $value ]]; then brightnessctl -m | awk -F, 'NR==1 {gsub(/%/,"",$4); print $4; exit}'; exit 0; fi
+if [[ -n $monitor ]]; then
+  brightnessctl -q -e4 -n2 --device "$monitor" set "$value"
+else
+  brightnessctl -q -e4 -n2 set "$value"
+fi

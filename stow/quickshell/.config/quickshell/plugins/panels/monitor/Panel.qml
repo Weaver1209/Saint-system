@@ -245,7 +245,7 @@ Panel {
     }
 
     root.brightnessSetQueued = false
-    setBrightnessProc.command = ["kiku-brightness-display", "--no-osd", "--monitor", root.focusedMonitor, percent + "%"]
+    setBrightnessProc.command = [root.helperDir + "/kiku-brightness-display", "--no-osd", "--monitor", root.focusedMonitor, percent + "%"]
     setBrightnessProc.running = true
   }
 
@@ -334,7 +334,7 @@ Panel {
   }
 
   function setTextSize(px) {
-    textScaleProc.command = ["omarchy-display-text-size", String(px)]
+    textScaleProc.command = [root.helperDir + "/omarchy-display-text-size", String(px)]
     if (!textScaleProc.running) textScaleProc.running = true
   }
 

@@ -19,6 +19,7 @@ Item {
   id: root
 
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
   property var shell: null
   property var manifest: null
 
@@ -125,8 +126,8 @@ Item {
       pwProc.running = false
     }
     qrProc.command = requestedIface
-      ? ["kiku-network-qr", "--meta", requestedIface]
-      : ["kiku-network-qr", "--meta"]
+      ? [root.helperDir + "/kiku-network-qr", "--meta", requestedIface]
+      : [root.helperDir + "/kiku-network-qr", "--meta"]
     qrProc.running = true
   }
 
@@ -150,7 +151,7 @@ Item {
     // Only a deliberate new lookup lowers the canceled-fetch guard, right as
     // it launches -- see the pwProc comment.
     pwExpectedStop = false
-    pwProc.command = ["kiku-network-password", iface]
+    pwProc.command = [root.helperDir + "/kiku-network-password", iface]
     pwProc.running = true
   }
 
