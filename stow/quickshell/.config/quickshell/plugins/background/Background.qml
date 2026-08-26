@@ -42,6 +42,7 @@ Item {
     path = String(path || "").trim()
     finalPath = String(finalPath || path).trim()
     fromPath = String(fromPath || "").trim()
+    if (!path || path === root.currentBackgroundLink) return
     if (!path || (!force && finalPath === currentBackground)) return
     currentBackground = finalPath
     backgroundVersion += 1

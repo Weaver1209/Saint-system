@@ -20,7 +20,7 @@ Item {
 
   property bool opened: false
   property string connectionName: ""
-  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
+  readonly property string helperDir: (Quickshell.env("HOME") || "/home/weaver") + "/.local/bin"
 
   property bool running: false
   property bool expectedStop: false

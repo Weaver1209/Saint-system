@@ -19,7 +19,7 @@ Panel {
   property string activeProfile: ""
   property int profileIndex: 0
   property bool cursorActive: false
-  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
+  readonly property string helperDir: (Quickshell.env("HOME") || "/home/weaver") + "/.local/bin"
   readonly property bool showPercentage: setting("showPercentage", true) !== false
   // With the percentage shown the button paints a text block wider than an
   // icon, so the open-panel mark takes the painted width instead of the

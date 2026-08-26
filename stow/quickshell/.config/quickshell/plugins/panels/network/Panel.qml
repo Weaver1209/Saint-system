@@ -75,7 +75,7 @@ Panel {
   property bool wifiStationAvailable: false
   property string dnsProvider: ""
   property string pendingDnsProvider: ""
-  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
+  readonly property string helperDir: (Quickshell.env("HOME") || "/home/weaver") + "/.local/bin"
   // Wi-Fi band state from `kiku-network-band`. `bandCurrent` is the band
   // the radio is actually on; `bandSelected` is the pinned choice ("auto" when
   // nothing is pinned), and the two differ whenever Auto is in effect.

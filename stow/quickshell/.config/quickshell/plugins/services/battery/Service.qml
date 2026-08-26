@@ -9,7 +9,7 @@ Item {
 
   property var shell: null
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
-  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
+  readonly property string helperDir: (Quickshell.env("HOME") || "/home/weaver") + "/.local/bin"
 
   readonly property int batteryThreshold: 10
   property string pendingPowerSource: ""

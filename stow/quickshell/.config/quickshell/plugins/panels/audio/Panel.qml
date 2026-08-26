@@ -12,7 +12,7 @@ Panel {
   id: root
   moduleName: "omarchy.audio"
   ipcTarget: "omarchy.audio"
-  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
+  readonly property string helperDir: (Quickshell.env("HOME") || "/home/weaver") + "/.local/bin"
 
   readonly property var sink: Pipewire.defaultAudioSink
   readonly property var source: Pipewire.defaultAudioSource

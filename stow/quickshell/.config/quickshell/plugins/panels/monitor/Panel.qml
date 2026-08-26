@@ -18,7 +18,7 @@ Panel {
   property int pendingBrightnessPercent: 0
   property bool brightnessSetQueued: false
   property bool brightnessAvailable: false
-  readonly property string helperDir: Quickshell.env("HOME") + "/.local/bin"
+  readonly property string helperDir: (Quickshell.env("HOME") || "/home/weaver") + "/.local/bin"
   property string internalMonitor: ""
   property string externalMonitor: ""
   property string focusedMonitor: ""
