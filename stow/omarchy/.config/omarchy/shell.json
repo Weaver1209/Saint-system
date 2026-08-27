@@ -37,13 +37,13 @@
           "id": "omarchy.system-update"
         },
         {
+          "id": "omarchy.protonvpn"
+        },
+        {
           "id": "omarchy.monitor"
         },
         {
           "id": "omarchy.network"
-        },
-        {
-          "id": "omarchy.protonvpn"
         },
         {
           "id": "omarchy.audio"

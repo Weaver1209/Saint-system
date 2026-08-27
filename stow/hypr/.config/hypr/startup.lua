@@ -1,4 +1,5 @@
 hl.on("hyprland.start", function()
     hl.exec_cmd("quickshell")
     hl.exec_cmd("~/.config/hyprpaper/hyprpaper.sh")
+    hl.exec_cmd("~/.config/hypr/scripts/clipboard.sh daemon")
 end)

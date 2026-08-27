@@ -1,15 +1,15 @@
-local terminal = "ghostty"
-local browser = "firefox"
+local terminal = "ghostty -e tmux new-session -A -s main"
+local browser = "brave-origin"
 local launcher = "rofi -show drun"
 
--- Terminal
+-- Terminal (tmux by default)
 hl.bind(
     "SUPER + RETURN",
     hl.dsp.exec_cmd(terminal),
-    { description = "Open terminal" }
+    { description = "Open terminal with tmux" }
 )
 
--- Browser
+-- Browser (Brave Origin)
 hl.bind(
     "SUPER + SHIFT + B",
     hl.dsp.exec_cmd(browser),
@@ -30,9 +30,53 @@ hl.bind(
     { description = "Close active window" }
 )
 
--- Toggle floating
+-- Unified Clipboard (Super + C, Super + V, Super + X)
+hl.bind(
+    "SUPER + C",
+    hl.dsp.send_shortcut({ mods = "CTRL", key = "Insert" }),
+    { description = "Universal copy" }
+)
+
 hl.bind(
     "SUPER + V",
+    hl.dsp.send_shortcut({ mods = "SHIFT", key = "Insert" }),
+    { description = "Universal paste" }
+)
+
+hl.bind(
+    "SUPER + X",
+    hl.dsp.send_shortcut({ mods = "CTRL", key = "X" }),
+    { description = "Universal cut" }
+)
+
+-- Clipboard Manager History
+hl.bind(
+    "SUPER + SHIFT + V",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/clipboard.sh pick"),
+    { description = "Open clipboard history manager" }
+)
+
+hl.bind(
+    "SUPER + CTRL + V",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/clipboard.sh pick"),
+    { description = "Open clipboard history manager" }
+)
+
+hl.bind(
+    "SUPER + ALT + V",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/clipboard.sh pick"),
+    { description = "Open clipboard history manager" }
+)
+
+-- Toggle floating
+hl.bind(
+    "SUPER + T",
+    hl.dsp.window.float(),
+    { description = "Toggle floating" }
+)
+
+hl.bind(
+    "SUPER + SHIFT + SPACE",
     hl.dsp.window.float(),
     { description = "Toggle floating" }
 )
@@ -56,7 +100,13 @@ hl.bind("SUPER + SHIFT + RIGHT", hl.dsp.window.move({ direction = "r" }))
 hl.bind("SUPER + SHIFT + UP", hl.dsp.window.move({ direction = "u" }))
 hl.bind("SUPER + SHIFT + DOWN", hl.dsp.window.move({ direction = "d" }))
 
--- Applications (SUPER + SHIFT + E, L, N)
+-- Applications (SUPER + SHIFT + C, E, L, N, O, S)
+hl.bind(
+    "SUPER + SHIFT + C",
+    hl.dsp.exec_cmd("calibre"),
+    { description = "Open Calibre" }
+)
+
 hl.bind(
     "SUPER + SHIFT + E",
     hl.dsp.exec_cmd("nautilus"),
@@ -80,6 +130,7 @@ hl.bind(
     hl.dsp.exec_cmd("ghostty -e $HOME/.local/bin/omp"),
     { description = "Open Oh My Pi (OMP)" }
 )
+
 hl.bind(
     "SUPER + SHIFT + S",
     hl.dsp.exec_cmd("spotify"),
@@ -116,12 +167,14 @@ hl.bind(
     hl.dsp.exec_cmd("$HOME/.local/bin/kiku-launch-webapp https://www.youtube.com"),
     { description = "Open YouTube" }
 )
+
 -- Exit
 hl.bind(
     "SUPER + SHIFT + M",
     hl.dsp.exec_cmd("hyprshutdown"),
     { description = "Exit Hyprland" }
 )
+
 for i = 1, 10 do
     local key = i % 10 -- 10 maps to key 0
     hl.bind(
@@ -136,6 +189,7 @@ for i = 1, 10 do
         { description = "Move window to workspace " .. i }
     )
 end
+
 -- Volume & Mute
 hl.bind(
     "XF86AudioRaiseVolume",

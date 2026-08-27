@@ -6,3 +6,14 @@ window-padding-x = 10
 window-padding-y = 10
 env = LANG=en_US.UTF-8
 env = LC_ALL=en_US.UTF-8
+
+# Clipboard & Copy/Paste configuration
+clipboard-read = allow
+clipboard-write = allow
+clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = false
+copy-on-select = clipboard
+keybind = super+c=copy_to_clipboard
+keybind = super+v=paste_from_clipboard
+keybind = shift+insert=paste_from_clipboard
+keybind = ctrl+insert=copy_to_clipboard

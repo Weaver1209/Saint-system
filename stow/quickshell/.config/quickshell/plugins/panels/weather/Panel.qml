@@ -72,13 +72,37 @@ Panel {
   property var dailyForecastReport: null
   property string wttrLocation: ""
 
-  // Configured location, read from the weather.json state file (owned by
-  // kiku-weather-location). The query is the wttr.in path segment
-  // (coordinates when stored, else the encoded name); empty means IP
-  // auto-detect. The watch makes hand edits take effect live.
-  property var configuredLocationState: ({ name: "", latitude: null, longitude: null })
-  readonly property string configuredLocation: configuredLocationState.name
-  readonly property string locationQuery: Model.wttrLocationQuery(configuredLocationState.name, configuredLocationState.latitude, configuredLocationState.longitude)
+  function resolvedSettingsLocation() {
+    var locName = (settings && (settings.name || settings.location)) ? String(settings.name || settings.location) : ""
+    var lat = (settings && settings.latitude !== undefined && settings.latitude !== null) ? parseFloat(settings.latitude) : null
+    var lon = (settings && settings.longitude !== undefined && settings.longitude !== null) ? parseFloat(settings.longitude) : null
+    return {
+      name: locName,
+      latitude: !isNaN(lat) ? lat : null,
+      longitude: !isNaN(lon) ? lon : null
+    }
+  }
+
+  // Configured location, read from settings (shell.json) or the weather.json state file.
+  // The query is the wttr.in path segment (coordinates when stored, else the encoded name);
+  // empty means IP auto-detect.
+  property var configuredLocationState: resolvedSettingsLocation()
+  readonly property string configuredLocation: configuredLocationState ? configuredLocationState.name : ""
+  readonly property string locationQuery: configuredLocationState ? Model.wttrLocationQuery(configuredLocationState.name, configuredLocationState.latitude, configuredLocationState.longitude) : ""
+
+  onSettingsChanged: {
+    if (!savingLocation) {
+      var nextState = resolvedSettingsLocation()
+      var curName = configuredLocationState ? configuredLocationState.name : ""
+      var curLat = configuredLocationState ? configuredLocationState.latitude : null
+      var curLon = configuredLocationState ? configuredLocationState.longitude : null
+      if (nextState.name !== curName || nextState.latitude !== curLat || nextState.longitude !== curLon) {
+        if (nextState.name || nextState.latitude !== null || !curName) {
+          configuredLocationState = nextState
+        }
+      }
+    }
+  }
 
   // Keep the previous report visible while the new location loads. The
   // editor remains open with a spinner, so stale data is never presented
@@ -97,8 +121,18 @@ Panel {
     watchChanges: true
     printErrors: false
     onFileChanged: reload()
-    onLoaded: root.configuredLocationState = Model.parseLocationFile(text())
-    onLoadFailed: root.configuredLocationState = Model.parseLocationFile("")
+    onLoaded: {
+      var parsed = Model.parseLocationFile(text())
+      if (parsed && (parsed.name || parsed.latitude !== null)) {
+        root.configuredLocationState = parsed
+      }
+    }
+    onLoadFailed: {
+      // If we already have configured location from settings, keep it
+      if (!root.configuredLocationState || (!root.configuredLocationState.name && root.configuredLocationState.latitude === null)) {
+        root.configuredLocationState = Model.parseLocationFile("")
+      }
+    }
   }
 
   // The first read can race shell startup (observed sporadically), leaving a
@@ -249,12 +283,31 @@ Panel {
   }
 
   function persistLocation(name, latitude, longitude) {
-    if (name && latitude !== null && longitude !== null)
-      locationSaveProc.command = ["kiku-weather-location", "--set", name, latitude + "," + longitude]
-    else if (name)
-      locationSaveProc.command = ["kiku-weather-location", "--set", name]
-    else
-      locationSaveProc.command = ["kiku-weather-location", "--clear"]
+    var locName = name || ""
+    var lat = (latitude !== null && latitude !== undefined && !isNaN(latitude)) ? latitude : null
+    var lon = (longitude !== null && longitude !== undefined && !isNaN(longitude)) ? longitude : null
+
+    configuredLocationState = {
+      name: locName,
+      latitude: lat,
+      longitude: lon
+    }
+
+    var entry = { id: root.moduleName }
+    for (var k in root.settings) if (k !== "id") entry[k] = root.settings[k]
+    entry["name"] = locName
+    entry["location"] = locName
+    entry["latitude"] = lat
+    entry["longitude"] = lon
+    root.settings = entry
+    if (root.hostWidget && "settings" in root.hostWidget) root.hostWidget.settings = entry
+    if (root.bar && root.bar.shell && typeof root.bar.shell.updateEntryInline === "function") {
+      root.bar.shell.updateEntryInline(root.moduleName, entry)
+    }
+
+    var payload = JSON.stringify({ name: locName, latitude: lat, longitude: lon }, null, 2)
+    var cmd = "mkdir -p $HOME/.local/state/omarchy/settings && echo " + Util.shellQuote(payload) + " > $HOME/.local/state/omarchy/settings/weather.json"
+    locationSaveProc.command = ["bash", "-c", cmd]
     locationSaveProc.running = true
   }
 

@@ -12,6 +12,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Sync Neovim unnamed register with system clipboard (Wayland / wl-clipboard)
+vim.opt.clipboard = "unnamedplus"
+
 -- Load aether theme from generated file
 local ok, aether_spec = pcall(dofile, os.getenv("HOME") .. "/.config/aether/theme/neovim.lua")
 

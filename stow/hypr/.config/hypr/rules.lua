@@ -35,3 +35,26 @@ hl.window_rule({
     size   = "650 420",
     center = true,
 })
+
+-- Workspace Assignments
+-- Browser on Workspace 1
+hl.window_rule({
+    name      = "browser-workspace-1",
+    match     = { class = "^(brave-origin|brave-browser|Brave-browser|firefox|google-chrome|chromium)$" },
+    workspace = "1",
+})
+
+-- Terminal on Workspace 2
+hl.window_rule({
+    name      = "terminal-workspace-2",
+    match     = { class = "^(com\\.mitchellh\\.ghostty|ghostty|kitty)$" },
+    workspace = "2",
+})
+
+-- Slack on Workspace 10
+hl.window_rule({
+    name      = "slack-workspace-10",
+    match     = { class = "^([Ss]lack)$" },
+    workspace = "10",
+})
+

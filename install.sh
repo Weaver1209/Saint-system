@@ -26,6 +26,7 @@ PACKAGES=(
     grim
     slurp
     wl-clipboard
+    cliphist
     brightnessctl
     playerctl
     libnotify
@@ -54,6 +55,14 @@ if command -v pacman &>/dev/null; then
     fi
 else
     echo "Warning: pacman not found, skipping package installation."
+fi
+
+# Fallback: Ensure cliphist is installed if not found
+if ! command -v cliphist &>/dev/null && [ ! -f "$HOME/.local/bin/cliphist" ]; then
+    if command -v go &>/dev/null; then
+        echo "==> Installing cliphist via go..."
+        GOBIN="$HOME/.local/bin" go install go.senan.xyz/cliphist@latest
+    fi
 fi
 
 echo "==> Checking SDDM display manager..."
@@ -94,7 +103,8 @@ if command -v systemctl &>/dev/null; then
     systemctl --user daemon-reload 2>/dev/null || true
     systemctl --user enable --now walt-aether.path 2>/dev/null || true
     systemctl --user enable --now walt-aether-sync.timer 2>/dev/null || true
+    systemctl --user enable --now cliphist.service 2>/dev/null || true
+    systemctl --user enable --now cliphist-images.service 2>/dev/null || true
 fi
 
 echo "==> Setup complete!"
-

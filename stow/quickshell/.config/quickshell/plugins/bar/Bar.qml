@@ -1249,10 +1249,6 @@ Item {
 
         CenterGestureArea { anchors.fill: parent }
 
-        HoverHandler {
-          onHoveredChanged: root.setCenterSectionHovered(hovered)
-        }
-
         ModuleList {
           visible: !centerRoot.hasAnchor
           entries: centerRoot.entries
@@ -1260,42 +1256,57 @@ Item {
           anchors.centerIn: parent
         }
 
-        ModuleList {
+        Item {
+          id: centerCluster
           visible: centerRoot.hasAnchor
-          entries: root.entriesBefore(centerRoot.entries, root.centerAnchor)
-          region: "center"
-          anchors.right: centerAnchorWrapper.left
-          anchors.rightMargin: Style.space(4)
-          anchors.verticalCenter: centerAnchorWrapper.verticalCenter
-        }
-
-        Rectangle {
-          id: centerAnchorWrapper
-          visible: centerRoot.hasAnchor
-          implicitWidth: centerAnchorModule.implicitWidth + Style.space(12)
-          implicitHeight: Math.max(16, root.barSize - Style.space(6))
           anchors.centerIn: parent
+          height: parent.height
+          implicitWidth: centerAnchorWrapper.implicitWidth + (leftModuleList.visible ? leftModuleList.implicitWidth + Style.space(4) : 0) + (rightModuleList.visible ? rightModuleList.implicitWidth + Style.space(4) : 0)
+          width: implicitWidth
 
-          color: Util.alpha("#181825", 0.85)
-          border.color: Util.alpha("#45475a", 0.60)
-          border.width: 1
-          radius: height / 2
-
-          ModuleSlot {
-            id: centerAnchorModule
-            anchors.centerIn: parent
-            entry: centerRoot.anchorEntry
-            region: "center"
+          HoverHandler {
+            onHoveredChanged: root.setCenterSectionHovered(hovered)
           }
-        }
 
-        ModuleList {
-          visible: centerRoot.hasAnchor
-          entries: root.entriesAfter(centerRoot.entries, root.centerAnchor)
-          region: "center"
-          anchors.left: centerAnchorWrapper.right
-          anchors.leftMargin: Style.space(4)
-          anchors.verticalCenter: centerAnchorWrapper.verticalCenter
+          ModuleList {
+            id: leftModuleList
+            visible: centerRoot.hasAnchor
+            entries: root.entriesBefore(centerRoot.entries, root.centerAnchor)
+            region: "center"
+            anchors.right: centerAnchorWrapper.left
+            anchors.rightMargin: Style.space(4)
+            anchors.verticalCenter: centerAnchorWrapper.verticalCenter
+          }
+
+          Rectangle {
+            id: centerAnchorWrapper
+            visible: centerRoot.hasAnchor
+            implicitWidth: centerAnchorModule.implicitWidth + Style.space(12)
+            implicitHeight: Math.max(16, root.barSize - Style.space(6))
+            anchors.centerIn: parent
+
+            color: Util.alpha("#181825", 0.85)
+            border.color: Util.alpha("#45475a", 0.60)
+            border.width: 1
+            radius: height / 2
+
+            ModuleSlot {
+              id: centerAnchorModule
+              anchors.centerIn: parent
+              entry: centerRoot.anchorEntry
+              region: "center"
+            }
+          }
+
+          ModuleList {
+            id: rightModuleList
+            visible: centerRoot.hasAnchor
+            entries: root.entriesAfter(centerRoot.entries, root.centerAnchor)
+            region: "center"
+            anchors.left: centerAnchorWrapper.right
+            anchors.leftMargin: Style.space(4)
+            anchors.verticalCenter: centerAnchorWrapper.verticalCenter
+          }
         }
       }
     }
@@ -1308,10 +1319,6 @@ Item {
 
         CenterGestureArea { anchors.fill: parent }
 
-        HoverHandler {
-          onHoveredChanged: root.setCenterSectionHovered(hovered)
-        }
-
         ModuleList {
           visible: !centerRoot.hasAnchor
           entries: centerRoot.entries
@@ -1319,42 +1326,57 @@ Item {
           anchors.centerIn: parent
         }
 
-        ModuleList {
+        Item {
+          id: centerCluster
           visible: centerRoot.hasAnchor
-          entries: root.entriesBefore(centerRoot.entries, root.centerAnchor)
-          region: "center"
-          anchors.bottom: centerAnchorWrapper.top
-          anchors.bottomMargin: Style.space(4)
-          anchors.horizontalCenter: centerAnchorWrapper.horizontalCenter
-        }
-
-        Rectangle {
-          id: centerAnchorWrapper
-          visible: centerRoot.hasAnchor
-          implicitWidth: Math.max(16, root.barSize - Style.space(6))
-          implicitHeight: centerAnchorModule.implicitHeight + Style.space(12)
           anchors.centerIn: parent
+          width: parent.width
+          implicitHeight: centerAnchorWrapper.implicitHeight + (topModuleList.visible ? topModuleList.implicitHeight + Style.space(4) : 0) + (bottomModuleList.visible ? bottomModuleList.implicitHeight + Style.space(4) : 0)
+          height: implicitHeight
 
-          color: Util.alpha("#181825", 0.85)
-          border.color: Util.alpha("#45475a", 0.60)
-          border.width: 1
-          radius: width / 2
-
-          ModuleSlot {
-            id: centerAnchorModule
-            anchors.centerIn: parent
-            entry: centerRoot.anchorEntry
-            region: "center"
+          HoverHandler {
+            onHoveredChanged: root.setCenterSectionHovered(hovered)
           }
-        }
 
-        ModuleList {
-          visible: centerRoot.hasAnchor
-          entries: root.entriesAfter(centerRoot.entries, root.centerAnchor)
-          region: "center"
-          anchors.top: centerAnchorWrapper.bottom
-          anchors.topMargin: Style.space(4)
-          anchors.horizontalCenter: centerAnchorWrapper.horizontalCenter
+          ModuleList {
+            id: topModuleList
+            visible: centerRoot.hasAnchor
+            entries: root.entriesBefore(centerRoot.entries, root.centerAnchor)
+            region: "center"
+            anchors.bottom: centerAnchorWrapper.top
+            anchors.bottomMargin: Style.space(4)
+            anchors.horizontalCenter: centerAnchorWrapper.horizontalCenter
+          }
+
+          Rectangle {
+            id: centerAnchorWrapper
+            visible: centerRoot.hasAnchor
+            implicitWidth: Math.max(16, root.barSize - Style.space(6))
+            implicitHeight: centerAnchorModule.implicitHeight + Style.space(12)
+            anchors.centerIn: parent
+
+            color: Util.alpha("#181825", 0.85)
+            border.color: Util.alpha("#45475a", 0.60)
+            border.width: 1
+            radius: width / 2
+
+            ModuleSlot {
+              id: centerAnchorModule
+              anchors.centerIn: parent
+              entry: centerRoot.anchorEntry
+              region: "center"
+            }
+          }
+
+          ModuleList {
+            id: bottomModuleList
+            visible: centerRoot.hasAnchor
+            entries: root.entriesAfter(centerRoot.entries, root.centerAnchor)
+            region: "center"
+            anchors.top: centerAnchorWrapper.bottom
+            anchors.topMargin: Style.space(4)
+            anchors.horizontalCenter: centerAnchorWrapper.horizontalCenter
+          }
         }
       }
     }
@@ -1460,13 +1482,13 @@ Item {
       id: horizontalModuleList
 
       Rectangle {
-        implicitWidth: row.implicitWidth + Style.space(8)
-        implicitHeight: Math.max(16, root.barSize - Style.space(6))
+        implicitWidth: row.implicitWidth > 0 ? row.implicitWidth + Style.space(8) : 0
+        implicitHeight: row.implicitWidth > 0 ? Math.max(16, root.barSize - Style.space(6)) : 0
         anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
-        color: Util.alpha("#181825", 0.85)
-        border.color: Util.alpha("#45475a", 0.60)
-        border.width: 1
+        color: row.implicitWidth > 0 ? Util.alpha("#181825", 0.85) : "transparent"
+        border.color: row.implicitWidth > 0 ? Util.alpha("#45475a", 0.60) : "transparent"
+        border.width: row.implicitWidth > 0 ? 1 : 0
         radius: height / 2
 
         Row {
@@ -1492,13 +1514,13 @@ Item {
       id: verticalModuleList
 
       Rectangle {
-        implicitWidth: Math.max(16, root.barSize - Style.space(6))
-        implicitHeight: col.implicitHeight + Style.space(8)
+        implicitWidth: col.implicitHeight > 0 ? Math.max(16, root.barSize - Style.space(6)) : 0
+        implicitHeight: col.implicitHeight > 0 ? col.implicitHeight + Style.space(8) : 0
         anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
 
-        color: Util.alpha("#181825", 0.85)
-        border.color: Util.alpha("#45475a", 0.60)
-        border.width: 1
+        color: col.implicitHeight > 0 ? Util.alpha("#181825", 0.85) : "transparent"
+        border.color: col.implicitHeight > 0 ? Util.alpha("#45475a", 0.60) : "transparent"
+        border.width: col.implicitHeight > 0 ? 1 : 0
         radius: width / 2
 
         Column {

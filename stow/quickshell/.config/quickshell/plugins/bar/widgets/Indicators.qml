@@ -16,6 +16,11 @@ BarWidget {
   property bool indicatorItemHovered: false
   readonly property bool alwaysShowIndicators: setting("alwaysShow", false) === true
   readonly property bool revealInactiveIndicators: alwaysShowIndicators || indicatorAreaHovered || indicatorItemHovered || (bar && bar.centerSectionRevealHeld === true && bar.centerHoverRevealSuppressed !== true)
+  property real inactiveRevealProgress: revealInactiveIndicators ? 1 : 0
+
+  Behavior on inactiveRevealProgress {
+    NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
+  }
 
   signal refreshRequested()
 
@@ -198,7 +203,7 @@ BarWidget {
     Item {
       id: inactiveHorizontalArea
 
-      implicitWidth: root.revealInactiveIndicators ? inactiveHorizontalBlock.implicitWidth : 0
+      implicitWidth: Math.round(inactiveHorizontalBlock.implicitWidth * root.inactiveRevealProgress)
       implicitHeight: inactiveHorizontalBlock.implicitHeight
       width: implicitWidth
       height: implicitHeight
@@ -244,7 +249,7 @@ BarWidget {
       id: inactiveVerticalArea
 
       implicitWidth: inactiveVerticalBlock.implicitWidth
-      implicitHeight: root.revealInactiveIndicators ? inactiveVerticalBlock.implicitHeight : 0
+      implicitHeight: Math.round(inactiveVerticalBlock.implicitHeight * root.inactiveRevealProgress)
       width: implicitWidth
       height: implicitHeight
       clip: true

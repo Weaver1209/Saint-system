@@ -1,0 +1,14 @@
+[Unit]
+Description=Cliphist clipboard history daemon for Wayland
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/wl-paste --type text --watch %h/.local/bin/cliphist store
+Restart=always
+RestartSec=1s
+Slice=session.slice
+
+[Install]
+WantedBy=graphical-session.target default.target
